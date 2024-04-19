@@ -14,7 +14,7 @@ export default class DeliveryController {
   }
 
   @Get('/')
-  @Example<ServiceResponse<Partial<Delivery>>>({
+  @Example<ServiceResponse<Partial<Delivery>[]>>({
     status: 200,
     message: 'success',
     data: [
@@ -42,7 +42,7 @@ export default class DeliveryController {
       },
     ],
   })
-  public async getAllDeliveries(): Promise<ServiceResponse<Delivery>> {
+  public async getAllDeliveries(): Promise<ServiceResponse<Delivery[]>> {
     return this.deliveryService.getAllDeliveries();
   }
 

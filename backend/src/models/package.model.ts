@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { Delivery } from '../types/delivery.type';
 import { model, Schema, Types } from '../mongodb';
 
 const packageSchema = new Schema<Package>({

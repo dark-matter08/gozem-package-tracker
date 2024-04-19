@@ -1,6 +1,7 @@
 import { Types } from '../mongodb';
 
 export interface Package {
+  active_delivery_id?: string;
   description: string;
   weight: number;
   width: number;

@@ -11,7 +11,7 @@ export default class DeliveryService {
     this.mongoService = new MongoService<DeliveryType>(DeliveryModel);
     this.packageService = new PackageService();
   }
-  public async getAllDeliveries(): Promise<ServiceResponse<Delivery>> {
+  public async getAllDeliveries(): Promise<ServiceResponse<Delivery[]>> {
     const deliveries = await this.mongoService.read();
 
     // ToDo: Paginate data
@@ -43,15 +43,31 @@ export default class DeliveryService {
   public async createNewDelivery(
     deliveryData: Partial<Delivery>
   ): Promise<ServiceResponse<Delivery>> {
+    if (!deliveryData.package_id) {
+      return {
+        status: ResponseCode.HTTP_400_BAD_REQUEST,
+        message: `package_id is required`,
+      };
+    }
+    const packageItem = await this.packageService.getPackageById(
+      deliveryData.package_id
+    );
+    if (!packageItem.data) {
+      return {
+        status: ResponseCode.HTTP_404_NOT_FOUND,
+        message: `package with that id does not exist`,
+      };
+    }
+    deliveryData.location = packageItem.data.from_location;
     const deliveryItem = await this.mongoService.create(
       deliveryData as DeliveryType
     );
-    // if (deliveryData.package_id) {
-    //   const packageId = deliveryData.package_id.toString();
-    //   await this.packageService.updatePackage(packageId, {
-    //     active_delivery_id: deliveryItem._id,
-    //   });
-    // }
+
+    const packageId = deliveryData.package_id;
+    await this.packageService.updatePackage(packageId, {
+      active_delivery_id: deliveryItem._id,
+    });
+
     return {
       status: ResponseCode.HTTP_201_CREATED,
       message: `successfully created new delivery`,

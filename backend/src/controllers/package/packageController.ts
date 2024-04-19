@@ -13,7 +13,7 @@ export default class PackageController {
     this.packageService = new PackageService();
   }
 
-  @Example<ServiceResponse<Partial<Package>>>({
+  @Example<ServiceResponse<Partial<Package>[]>>({
     status: 200,
     message: 'success',
     data: [
@@ -58,7 +58,7 @@ export default class PackageController {
     ],
   })
   @Get('/')
-  public async getAllPackages(): Promise<ServiceResponse<Package>> {
+  public async getAllPackages(): Promise<ServiceResponse<Package[]>> {
     return this.packageService.getAllPackages();
   }
 
