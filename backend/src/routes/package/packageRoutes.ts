@@ -34,6 +34,8 @@ export default class PackageRoutes {
         const result = await this.packageController.createNewPackage(req.body);
         res.status(result.status as number).send(result);
       } catch (e) {
+        console.log(e);
+
         res.status(500).send({ error: 'unknown Error' });
       }
     });

@@ -1,11 +1,15 @@
-import { Delivery, DeliveryModel } from '../../models';
+import { Delivery as DeliveryType, DeliveryModel } from '../../models';
+import { Delivery } from '../../types/delivery.type';
 import { ResponseCode, ServiceResponse } from '../../utils';
+import { PackageService } from '../package';
 import { IModelService, MongoService } from '../utils/mongo.service';
 
 export default class DeliveryService {
-  private mongoService: IModelService<Delivery>;
+  private mongoService: IModelService<DeliveryType>;
+  private packageService: PackageService;
   constructor() {
-    this.mongoService = new MongoService<Delivery>(DeliveryModel);
+    this.mongoService = new MongoService<DeliveryType>(DeliveryModel);
+    this.packageService = new PackageService();
   }
   public async getAllDeliveries(): Promise<ServiceResponse<Delivery>> {
     const deliveries = await this.mongoService.read();
@@ -14,7 +18,7 @@ export default class DeliveryService {
     return {
       status: ResponseCode.HTTP_200_OK,
       message: `returning all deliveries`,
-      data: deliveries,
+      data: deliveries as Delivery[],
     };
   }
 
@@ -26,7 +30,7 @@ export default class DeliveryService {
       return {
         status: ResponseCode.HTTP_200_OK,
         message: `returning delivery with id: ${deliveryId}`,
-        data: deliveryItem,
+        data: deliveryItem as Delivery,
       };
     }
 
@@ -39,11 +43,19 @@ export default class DeliveryService {
   public async createNewDelivery(
     deliveryData: Partial<Delivery>
   ): Promise<ServiceResponse<Delivery>> {
-    const deliveryItem = await this.mongoService.create(deliveryData);
+    const deliveryItem = await this.mongoService.create(
+      deliveryData as DeliveryType
+    );
+    // if (deliveryData.package_id) {
+    //   const packageId = deliveryData.package_id.toString();
+    //   await this.packageService.updatePackage(packageId, {
+    //     active_delivery_id: deliveryItem._id,
+    //   });
+    // }
     return {
       status: ResponseCode.HTTP_201_CREATED,
       message: `successfully created new delivery`,
-      data: deliveryItem,
+      data: deliveryItem as Delivery,
     };
   }
 
@@ -53,14 +65,14 @@ export default class DeliveryService {
   ): Promise<ServiceResponse<Delivery>> {
     const deliveryItem = await this.mongoService.update(
       deliveryId,
-      deliveryData
+      deliveryData as DeliveryType
     );
 
     if (deliveryItem) {
       return {
         status: ResponseCode.HTTP_200_OK,
         message: `delivery with id: ${deliveryId} has been update`,
-        data: deliveryItem,
+        data: deliveryItem as Delivery,
       };
     }
 

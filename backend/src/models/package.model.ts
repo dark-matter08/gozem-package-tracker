@@ -1,9 +1,13 @@
 import mongoose from 'mongoose';
-
-const { Schema, model } = mongoose;
+import { Delivery } from '../types/delivery.type';
+import { model, Schema, Types } from '../mongodb';
 
 const packageSchema = new Schema<Package>({
-  package_id: { type: String, required: true },
+  active_delivery_id: {
+    type: Schema.Types.ObjectId,
+    ref: 'Delivery',
+    required: false,
+  },
   description: String,
   weight: { type: Number, required: true },
   width: { type: Number, required: true },
@@ -24,7 +28,8 @@ const packageSchema = new Schema<Package>({
 });
 
 export interface Package extends mongoose.Document {
-  package_id: string;
+  _id?: string;
+  active_delivery_id?: Types.ObjectId;
   description: string;
   weight: number;
   width: number;

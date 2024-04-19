@@ -1,11 +1,12 @@
-import { Package, PackageModel } from '../../models';
+import { PackageModel, Package as PackageType } from '../../models';
+import { Package } from '../../types/package.type';
 import { ResponseCode, ServiceResponse } from '../../utils';
 import { IModelService, MongoService } from '../utils/mongo.service';
 
 export default class PackageService {
-  private mongoService: IModelService<Package>;
+  private mongoService: IModelService<PackageType>;
   constructor() {
-    this.mongoService = new MongoService<Package>(PackageModel);
+    this.mongoService = new MongoService<PackageType>(PackageModel);
   }
   public async getAllPackages(): Promise<ServiceResponse<Package>> {
     const packages = await this.mongoService.read();
@@ -14,7 +15,7 @@ export default class PackageService {
     return {
       status: ResponseCode.HTTP_200_OK,
       message: `returning all packages`,
-      data: packages,
+      data: packages as Package[],
     };
   }
 
@@ -26,7 +27,7 @@ export default class PackageService {
       return {
         status: ResponseCode.HTTP_200_OK,
         message: `return package with id: ${packageId}`,
-        data: packageItem,
+        data: packageItem as Package,
       };
     }
 
@@ -39,11 +40,13 @@ export default class PackageService {
   public async createNewPackage(
     packageData: Partial<Package>
   ): Promise<ServiceResponse<Package>> {
-    const packageItem = await this.mongoService.create(packageData);
+    const packageItem = await this.mongoService.create(
+      packageData as PackageType
+    );
     return {
       status: ResponseCode.HTTP_201_CREATED,
       message: `successfully created new package`,
-      data: packageItem,
+      data: packageItem as Package,
     };
   }
 
@@ -51,13 +54,16 @@ export default class PackageService {
     packageId: string,
     packageData: Partial<Package>
   ): Promise<ServiceResponse<Package>> {
-    const packageItem = await this.mongoService.update(packageId, packageData);
+    const packageItem = await this.mongoService.update(
+      packageId,
+      packageData as PackageType
+    );
 
     if (packageItem) {
       return {
         status: ResponseCode.HTTP_200_OK,
         message: `package with id: ${packageId} has been update`,
-        data: packageItem,
+        data: packageItem as Package,
       };
     }
 

@@ -14,4 +14,4 @@ export async function connectMongoDb() {
 
 export const ObjectId = mongoose.Types.ObjectId;
 
-export { Document, Model, Query, Types, model } from 'mongoose';
+export { Document, Model, Query, Types, model, Schema } from 'mongoose';

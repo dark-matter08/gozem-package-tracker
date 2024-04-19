@@ -19,11 +19,25 @@ export default class DeliveryController {
     message: 'success',
     data: [
       {
-        delivery_id: 'xxxx1',
+        package_id: '----xxxxxx-----',
+        pickup_time: new Date('2024-05-21T09:50:45.523Z'),
+        start_time: new Date('2024-04-13T09:50:45.523Z'),
+        end_time: new Date('2024-05-13T09:50:45.523Z'),
+        location: {
+          lat: 4.1121,
+          lng: 9.313131,
+        },
         status: 'open',
       },
       {
-        delivery_id: 'xxxx2',
+        package_id: '----xx4xxx-----',
+        pickup_time: new Date('2024-05-21T09:50:45.523Z'),
+        start_time: new Date('2024-04-13T09:50:45.523Z'),
+        end_time: new Date('2024-05-13T09:50:45.523Z'),
+        location: {
+          lat: 4.1121,
+          lng: 9.313131,
+        },
         status: 'picked-up',
       },
     ],
@@ -37,8 +51,15 @@ export default class DeliveryController {
     status: 200,
     message: 'success',
     data: {
-      delivery_id: 'xxxx2',
-      status: 'open',
+      package_id: '----xx4xxx-----',
+      pickup_time: new Date('2024-05-21T09:50:45.523Z'),
+      start_time: new Date('2024-04-13T09:50:45.523Z'),
+      end_time: new Date('2024-05-13T09:50:45.523Z'),
+      location: {
+        lat: 4.1121,
+        lng: 9.313131,
+      },
+      status: 'picked-up',
     },
   })
   public async getDeliveryById(
@@ -52,7 +73,14 @@ export default class DeliveryController {
     status: 201,
     message: 'success',
     data: {
-      delivery_id: 'xxxx2',
+      package_id: '----xx4xxx-----',
+      pickup_time: new Date('2024-05-21T09:50:45.523Z'),
+      start_time: new Date('2024-04-13T09:50:45.523Z'),
+      end_time: new Date('2024-05-13T09:50:45.523Z'),
+      location: {
+        lat: 4.1121,
+        lng: 9.313131,
+      },
       status: 'open',
     },
   })
@@ -67,8 +95,15 @@ export default class DeliveryController {
     status: 201,
     message: 'success',
     data: {
-      delivery_id: 'xxxx2',
-      status: 'open',
+      package_id: '----xx4xxx-----',
+      pickup_time: new Date('2024-05-21T09:50:45.523Z'),
+      start_time: new Date('2024-04-13T09:50:45.523Z'),
+      end_time: new Date('2024-05-13T09:50:45.523Z'),
+      location: {
+        lat: 4.1121,
+        lng: 9.313131,
+      },
+      status: 'picked-up',
     },
   })
   public async updateDelivery(

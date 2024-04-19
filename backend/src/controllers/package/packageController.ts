@@ -18,12 +18,42 @@ export default class PackageController {
     message: 'success',
     data: [
       {
-        package_id: 'xxxx1',
-        description: 'xxxx',
+        description: 'hello 00000xxx000',
+        weight: 32,
+        width: 12,
+        height: 43,
+        depth: 19,
+        from_name: 'xxxxhimxxxxx',
+        from_address: 'xxxxxfromxxxxx',
+        from_location: {
+          lat: 41.2222,
+          lng: 45.12112,
+        },
+        to_name: 'xxxxxherxxxxx',
+        to_address: 'xxxxxxwherexxx',
+        to_location: {
+          lat: 21.1212,
+          lng: 32.12121,
+        },
       },
       {
-        package_id: 'xxxx2',
-        description: 'xxxxxxxx',
+        description: 'shoksssss 00000xxx000',
+        weight: 32,
+        width: 12,
+        height: 43,
+        depth: 19,
+        from_name: 'xxxxherxxxxx',
+        from_address: 'xxxxxfromxxxxx',
+        from_location: {
+          lat: 41.2222,
+          lng: 45.12112,
+        },
+        to_name: 'xxxxxhimxxxxx',
+        to_address: 'xxxxxxwherexxx',
+        to_location: {
+          lat: 21.1212,
+          lng: 32.12121,
+        },
       },
     ],
   })
@@ -36,8 +66,23 @@ export default class PackageController {
     status: 200,
     message: 'success',
     data: {
-      package_id: 'xxxx1',
-      description: 'xxxx',
+      description: 'hello 00000xxx000',
+      weight: 32,
+      width: 12,
+      height: 43,
+      depth: 19,
+      from_name: 'xxxxhimxxxxx',
+      from_address: 'xxxxxfromxxxxx',
+      from_location: {
+        lat: 41.2222,
+        lng: 45.12112,
+      },
+      to_name: 'xxxxxherxxxxx',
+      to_address: 'xxxxxxwherexxx',
+      to_location: {
+        lat: 21.1212,
+        lng: 32.12121,
+      },
     },
   })
   @Get('/{packageId}')
@@ -51,8 +96,23 @@ export default class PackageController {
     status: 201,
     message: 'success',
     data: {
-      package_id: 'xxxx1',
-      description: 'xxxx',
+      description: 'hello 00000xxx000',
+      weight: 32,
+      width: 12,
+      height: 43,
+      depth: 19,
+      from_name: 'xxxxhimxxxxx',
+      from_address: 'xxxxxfromxxxxx',
+      from_location: {
+        lat: 41.2222,
+        lng: 45.12112,
+      },
+      to_name: 'xxxxxherxxxxx',
+      to_address: 'xxxxxxwherexxx',
+      to_location: {
+        lat: 21.1212,
+        lng: 32.12121,
+      },
     },
   })
   @Post('/create')
@@ -66,8 +126,23 @@ export default class PackageController {
     status: 201,
     message: 'success',
     data: {
-      package_id: 'xxxx1',
-      description: 'xxxx',
+      description: 'hello 00000xxx000',
+      weight: 32,
+      width: 12,
+      height: 43,
+      depth: 19,
+      from_name: 'xxxxhimxxxxx',
+      from_address: 'xxxxxfromxxxxx',
+      from_location: {
+        lat: 41.2222,
+        lng: 45.12112,
+      },
+      to_name: 'xxxxxherxxxxx',
+      to_address: 'xxxxxxwherexxx',
+      to_location: {
+        lat: 21.1212,
+        lng: 32.12121,
+      },
     },
   })
   @Put('/{packageId}')

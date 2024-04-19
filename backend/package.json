@@ -12,7 +12,8 @@
     "build": "tsoa spec-and-routes && tsc",
     "dev": "nodemon --legacy-watch",
     "swagger": "tsoa spec",
-    "test": "jest"
+    "test": "jest",
+    "swagger:update": "tsoa spec --config ./tsconfig.tsoa.json"
   },
   "repository": "git+https://github.com/dark-matter08/gozem-package-tracker.git",
   "author": "Nde Lucien",

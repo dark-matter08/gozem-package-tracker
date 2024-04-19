@@ -1,5 +1,6 @@
+import { Types } from '../mongodb';
+
 export interface Package {
-  package_id: string;
   description: string;
   weight: number;
   width: number;

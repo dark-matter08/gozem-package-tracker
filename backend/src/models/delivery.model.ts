@@ -1,12 +1,7 @@
 import mongoose from 'mongoose';
-import { Types } from '../mongodb';
-import { Package } from '../types/package.type';
-
-const { Schema, model } = mongoose;
+import { Types, Schema, model } from '../mongodb';
 
 const deliverySchema = new Schema<Delivery>({
-  delivery_id: { type: String, required: true },
-  active_delivery_id: String,
   package_id: { type: Schema.Types.ObjectId, ref: 'Package', required: true },
   pickup_time: Date,
   start_time: Date,
@@ -23,9 +18,8 @@ const deliverySchema = new Schema<Delivery>({
 });
 
 export interface Delivery extends mongoose.Document {
-  delivery_id: string;
-  active_delivery_id: string;
-  package_id: Package;
+  _id?: string;
+  package_id?: Types.ObjectId;
   pickup_time: Date;
   start_time: Date;
   end_time: Date;
