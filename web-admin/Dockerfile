@@ -10,4 +10,6 @@ RUN npm install
 
 COPY . .
 
-CMD ["ng", "serve", "--host", "0.0.0.0"]
+EXPOSE 4202
+
+CMD ["ng", "serve", "--host", "0.0.0.0", "--port" "4202"]

@@ -9,9 +9,10 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     restart: unless-stopped
-    command: sh -c "wait && npm run test && npm run build && npm run dev"
+    command: sh -c "wait && npm run dev"
     volumes:
       - ./backend/src:/app/src
+      - ./backend/package.json:/app/package.json
       - ./backend/tsconfig.json:/app/tsconfig.json
       - ./backend/tsoa.json:/app/tsoa.json
       - ./backend/jest.config.ts:/app/jest.config.ts
@@ -33,6 +34,7 @@ services:
     build:
       context: ./web-client
       dockerfile: Dockerfile
+    command: sh -c "wait && npm run start"
     ports:
       - '4200:4200'
     volumes:
@@ -47,6 +49,7 @@ services:
     build:
       context: ./web-driver
       dockerfile: Dockerfile
+    command: sh -c "wait && npm run start"
     ports:
       - '4201:4201'
     volumes:
@@ -61,6 +64,7 @@ services:
     build:
       context: ./web-admin
       dockerfile: Dockerfile
+    command: sh -c "wait && npm run start"
     ports:
       - '4202:4202'
     volumes:
