@@ -1,0 +1,19 @@
+<div class="body">
+  <h1>Track Your Package</h1>
+
+  <form
+    [formGroup]="trackerForm"
+    (ngSubmit)="onSubmit()"
+    class="package-tracker"
+  >
+    <input
+      id="packageId"
+      type="text"
+      formControlName="packageId"
+      placeholder="Enter Package Id"
+      class="package-id-input"
+    />
+
+    <button class="track-button" type="submit">Track</button>
+  </form>
+</div>
