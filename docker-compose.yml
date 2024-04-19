@@ -18,7 +18,7 @@ services:
       - ./backend/jest.config.ts:/app/jest.config.ts
     environment:
       PORT: 8004
-      CONNECTION_STRING: mongodb://mongodb:27017/ntopor-social
+      CONNECTION_STRING: mongodb://mongodb:27017/package-tracker
       JWT_SECRET: 'this-may-change'
     ports:
       - 8004:8004

@@ -5,6 +5,7 @@ import routes from './routes';
 import cors from 'cors';
 import morgan from 'morgan';
 import { start_socket } from './utils/socket-service';
+import { connectMongoDb } from './mongodb';
 class Server {
   public app: express.Application;
 
@@ -17,6 +18,7 @@ class Server {
       })
     );
     start_socket(this.app);
+    connectMongoDb();
     this.config();
   }
 
@@ -42,7 +44,7 @@ class Server {
 
   public start(): void {
     this.app.listen(this.app.get('port'), () => {
-      console.log('Server listening in port', APPCONFIGS.PORT);
+      console.log('[🚀 ] - Server listening in port', APPCONFIGS.PORT);
     });
   }
 }
