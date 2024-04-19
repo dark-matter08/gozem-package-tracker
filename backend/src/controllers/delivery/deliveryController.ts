@@ -1,7 +1,7 @@
 import { Body, Delete, Example, Get, Path, Post, Put, Route, Tags } from 'tsoa';
-import { Delivery } from '../../models';
 import { DeliveryService } from '../../services';
 import { ServiceResponse } from '../../utils';
+import { Delivery } from '../../types/delivery.type';
 
 @Route('/api/v1/delivery')
 @Tags('Delivery Controller Operations')
@@ -14,21 +14,21 @@ export default class DeliveryController {
   }
 
   @Get('/')
-  @Example<ServiceResponse<Partial<Delivery>[]>>({
+  @Example<ServiceResponse<Partial<Delivery>>>({
     status: 200,
     message: 'success',
     data: [
       {
         delivery_id: 'xxxx1',
-        status: 'xxxx',
+        status: 'open',
       },
       {
         delivery_id: 'xxxx2',
-        status: 'xxxxxxxx',
+        status: 'picked-up',
       },
     ],
   })
-  public async getAllDeliveries(): Promise<ServiceResponse<Delivery[]>> {
+  public async getAllDeliveries(): Promise<ServiceResponse<Delivery>> {
     return this.deliveryService.getAllDeliveries();
   }
 
@@ -38,7 +38,7 @@ export default class DeliveryController {
     message: 'success',
     data: {
       delivery_id: 'xxxx2',
-      status: 'xxxxxxxx',
+      status: 'open',
     },
   })
   public async getDeliveryById(
@@ -53,7 +53,7 @@ export default class DeliveryController {
     message: 'success',
     data: {
       delivery_id: 'xxxx2',
-      status: 'xxxxxxxx',
+      status: 'open',
     },
   })
   public async createNewDelivery(
@@ -62,13 +62,13 @@ export default class DeliveryController {
     return this.deliveryService.createNewDelivery(data);
   }
 
-  @Put('/update/{deliveryId}')
+  @Put('/{deliveryId}')
   @Example<ServiceResponse<Partial<Delivery>>>({
     status: 201,
     message: 'success',
     data: {
       delivery_id: 'xxxx2',
-      status: 'xxxxxxxx',
+      status: 'open',
     },
   })
   public async updateDelivery(
@@ -78,7 +78,7 @@ export default class DeliveryController {
     return this.deliveryService.updateDelivery(deliveryId, data);
   }
 
-  @Delete('/delete/{deliveryId}')
+  @Delete('/{deliveryId}')
   @Example<ServiceResponse<Partial<Delivery>>>({
     status: 201,
     message: 'success',

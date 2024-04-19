@@ -1,7 +1,7 @@
 import { Body, Delete, Example, Get, Path, Post, Put, Route, Tags } from 'tsoa';
-import { Health, Package } from '../../models';
-import { HealthService, PackageService } from '../../services';
+import { PackageService } from '../../services';
 import { ServiceResponse } from '../../utils';
+import { Package } from '../../types/package.type';
 
 @Route('/api/v1/package')
 @Tags('Package Controller Operations')
@@ -13,8 +13,7 @@ export default class PackageController {
     this.packageService = new PackageService();
   }
 
-  @Get('/')
-  @Example<ServiceResponse<Partial<Package>[]>>({
+  @Example<ServiceResponse<Partial<Package>>>({
     status: 200,
     message: 'success',
     data: [
@@ -28,11 +27,11 @@ export default class PackageController {
       },
     ],
   })
-  public async getAllPackages(): Promise<ServiceResponse<Package[]>> {
+  @Get('/')
+  public async getAllPackages(): Promise<ServiceResponse<Package>> {
     return this.packageService.getAllPackages();
   }
 
-  @Get('/{packageId}')
   @Example<ServiceResponse<Partial<Package>>>({
     status: 200,
     message: 'success',
@@ -41,13 +40,13 @@ export default class PackageController {
       description: 'xxxx',
     },
   })
+  @Get('/{packageId}')
   public async getPackageById(
     @Path() packageId: string
   ): Promise<ServiceResponse<Package>> {
     return this.packageService.getPackageById(packageId);
   }
 
-  @Post('/create')
   @Example<ServiceResponse<Partial<Package>>>({
     status: 201,
     message: 'success',
@@ -56,13 +55,13 @@ export default class PackageController {
       description: 'xxxx',
     },
   })
+  @Post('/create')
   public async createNewPackage(
     @Body() data: Partial<Package>
   ): Promise<ServiceResponse<Package>> {
     return this.packageService.createNewPackage(data);
   }
 
-  @Put('/{packageId}')
   @Example<ServiceResponse<Partial<Package>>>({
     status: 201,
     message: 'success',
@@ -71,6 +70,7 @@ export default class PackageController {
       description: 'xxxx',
     },
   })
+  @Put('/{packageId}')
   public async updatePackage(
     @Path() packageId: string,
     @Body() data: Partial<Package>
@@ -78,11 +78,11 @@ export default class PackageController {
     return this.packageService.updatePackage(packageId, data);
   }
 
-  @Delete('/{packageId}')
   @Example<ServiceResponse<Partial<Package>>>({
     status: 201,
     message: 'success',
   })
+  @Delete('/{packageId}')
   public async deletePackage(
     @Path() packageId: string
   ): Promise<ServiceResponse<Package>> {

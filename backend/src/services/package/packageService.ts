@@ -7,7 +7,7 @@ export default class PackageService {
   constructor() {
     this.mongoService = new MongoService<Package>(PackageModel);
   }
-  public async getAllPackages(): Promise<ServiceResponse<Package[]>> {
+  public async getAllPackages(): Promise<ServiceResponse<Package>> {
     const packages = await this.mongoService.read();
 
     // ToDo: Paginate data

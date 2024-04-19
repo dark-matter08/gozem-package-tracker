@@ -7,7 +7,7 @@ export default class DeliveryService {
   constructor() {
     this.mongoService = new MongoService<Delivery>(DeliveryModel);
   }
-  public async getAllDeliveries(): Promise<ServiceResponse<Delivery[]>> {
+  public async getAllDeliveries(): Promise<ServiceResponse<Delivery>> {
     const deliveries = await this.mongoService.read();
 
     // ToDo: Paginate data
