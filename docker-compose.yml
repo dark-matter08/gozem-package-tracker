@@ -18,7 +18,7 @@ services:
       - ./backend/jest.config.ts:/app/jest.config.ts
     environment:
       PORT: 8004
-      CONNECTION_STRING: mongodb://mongodb:27017/package-tracker
+      CONNECTION_STRING: mongodb://mongodb:27019/package-tracker
       JWT_SECRET: 'this-may-change'
     ports:
       - 8004:8004
@@ -34,7 +34,7 @@ services:
     build:
       context: ./web-client
       dockerfile: Dockerfile
-    command: sh -c "wait && npm run start"
+    command: sh -c "ng serve --host 0.0.0.0 --port 4200"
     ports:
       - '4200:4200'
     volumes:
@@ -49,7 +49,7 @@ services:
     build:
       context: ./web-driver
       dockerfile: Dockerfile
-    command: sh -c "wait && npm run start"
+    command: sh -c "ng serve --host 0.0.0.0 --port 4201"
     ports:
       - '4201:4201'
     volumes:
@@ -64,7 +64,7 @@ services:
     build:
       context: ./web-admin
       dockerfile: Dockerfile
-    command: sh -c "wait && npm run start"
+    command: sh -c "ng serve --host 0.0.0.0 --port 4202"
     ports:
       - '4202:4202'
     volumes:
@@ -81,9 +81,11 @@ services:
     hostname: mongodb
     restart: always
     ports:
-      - '27017:27017'
+      - '27019:27019'
     volumes:
       - ./database:/database/
+      - ./mongod.conf:/etc/mongod.conf
+    command: mongod --config /etc/mongod.conf
     environment:
       MONGO_INITDB_ROOT_USERNAME: # DATABASE_NAME
       MONGO_INITDB_ROOT_PASSWORD: # DATABASE_USER

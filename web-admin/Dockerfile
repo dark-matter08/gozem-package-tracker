@@ -12,4 +12,4 @@ COPY . .
 
 EXPOSE 4202
 
-CMD ["ng", "serve", "--host", "0.0.0.0", "--port" "4202"]
+CMD ["npm", "run", "start"]
