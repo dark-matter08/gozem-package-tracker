@@ -1,0 +1,87 @@
+networks:
+  app-network:
+    driver: bridge
+
+services:
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    command: sh -c "wait && npm run test && npm run build && npm run dev"
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/tsconfig.json:/app/tsconfig.json
+      - ./backend/tsoa.json:/app/tsoa.json
+      - ./backend/jest.config.ts:/app/jest.config.ts
+    environment:
+      PORT: 8004
+      CONNECTION_STRING: mongodb://mongodb:27017/ntopor-social
+      JWT_SECRET: 'this-may-change'
+    ports:
+      - 8004:8004
+    stdin_open: true
+    tty: true
+    depends_on:
+      - database
+    networks:
+      - app-network
+
+  web-client:
+    container_name: web-client
+    build:
+      context: ./web-client
+      dockerfile: Dockerfile
+    ports:
+      - '4200:4200'
+    volumes:
+      - ./web-client/src:/app/src
+    environment:
+      - STYLE=css
+    networks:
+      - app-network
+
+  web-driver:
+    container_name: web-driver
+    build:
+      context: ./web-driver
+      dockerfile: Dockerfile
+    ports:
+      - '4201:4201'
+    volumes:
+      - ./web-driver/src:/app/src
+    environment:
+      - STYLE=css
+    networks:
+      - app-network
+
+  web-admin:
+    container_name: web-admin
+    build:
+      context: ./web-admin
+      dockerfile: Dockerfile
+    ports:
+      - '4202:4202'
+    volumes:
+      - ./web-admin/src:/app/src
+    environment:
+      - STYLE=css
+    networks:
+      - app-network
+
+  # mongodb service
+  database:
+    image: mongo
+    container_name: mongodb
+    hostname: mongodb
+    restart: always
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./database:/database/
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: # DATABASE_NAME
+      MONGO_INITDB_ROOT_PASSWORD: # DATABASE_USER
+    networks:
+      - app-network

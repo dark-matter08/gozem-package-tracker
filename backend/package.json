@@ -1,0 +1,61 @@
+{
+  "name": "gozem-package-tracker-backend",
+  "version": "1.0.0",
+  "description": "Backend for gozem tracker",
+  "main": "index.ts",
+  "scripts": {
+    "lint": "eslint --max-warnings=0 --ext .js,.ts .",
+    "start": "node build/index.js",
+    "predev": "npm run swagger",
+    "prebuild": "npm run swagger",
+    "format": "prettier --write .",
+    "build": "tsoa spec-and-routes && tsc",
+    "dev": "nodemon --legacy-watch",
+    "swagger": "tsoa spec",
+    "test": "jest"
+  },
+  "repository": "git+https://github.com/dark-matter08/gozem-package-tracker.git",
+  "author": "Nde Lucien",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dark-matter08/gozem-package-tracker/issues"
+  },
+  "homepage": "https://github.com/dark-matter08/gozem-package-tracker#readme",
+  "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
+    "@babel/preset-typescript": "^7.23.3",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.11.26",
+    "@typescript-eslint/parser": "^7.2.0",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.2"
+  },
+  "dependencies": {
+    "@types/swagger-ui-express": "^4.1.6",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "axios": "^1.6.7",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "date-fns": "^3.4.0",
+    "dotenv": "^16.4.5",
+    "eslint": "^8.57.0",
+    "eslint-plugin-typescript-sort-keys": "^3.2.0",
+    "eslint-plugin-unused-imports": "^3.1.0",
+    "express": "^4.18.3",
+    "jsonwebtoken": "^9.0.2",
+    "liquidjs": "^10.10.1",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.9.12",
+    "otp-generator": "^4.0.1",
+    "prettier": "^3.2.5",
+    "socket.io": "^4.7.5",
+    "swagger-ui-express": "^5.0.0",
+    "tsoa": "^6.1.4",
+    "uuid": "^9.0.1"
+  },
+  "private": false
+}
