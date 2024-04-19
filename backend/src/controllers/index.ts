@@ -1,2 +1,4 @@
 import { HealthController } from './authorization';
-export { HealthController };
+import { PackageController } from './package';
+
+export { HealthController, PackageController };

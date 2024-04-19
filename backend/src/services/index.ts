@@ -1,3 +1,5 @@
 import { HealthService } from './authorization';
+import { DeliveryService } from './delivery';
+import { PackageService } from './package';
 
-export { HealthService };
+export { HealthService, DeliveryService, PackageService };
