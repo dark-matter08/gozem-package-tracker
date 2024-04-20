@@ -22,7 +22,9 @@ export default class PackageService {
   public async getPackageById(
     packageId: string
   ): Promise<ServiceResponse<Package>> {
-    const packageItem = await this.mongoService.readById(packageId);
+    const packageItem = await this.mongoService.populate(packageId, {
+      fields: ['active_delivery_id'],
+    });
     if (packageItem) {
       return {
         status: ResponseCode.HTTP_200_OK,

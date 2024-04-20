@@ -7,6 +7,14 @@ export interface IModelService<T> {
   readById(id: string): Promise<T | null>;
   update(id: string, data: Partial<T>): Promise<T | null>;
   delete(id: string): Promise<void>;
+  populate(id: string, populateOptions: PopulateOptions): Promise<T | null>;
+}
+
+export class PopulateOptions {
+  // Define properties for your customization options here
+  fields?: string[]; // Array of field names to populate
+  model?: Model<any>; // Model to populate the fields with
+  options?: any; // Additional options for the populate function (optional)
 }
 
 export class MongoService<T> implements IModelService<T> {
@@ -33,5 +41,22 @@ export class MongoService<T> implements IModelService<T> {
 
   async delete(id: string): Promise<void> {
     await this.model.findByIdAndDelete(new ObjectId(id));
+  }
+
+  async populate(
+    id: string,
+    populateOptions: PopulateOptions
+  ): Promise<T | null> {
+    const query = this.model.findById(new ObjectId(id));
+
+    // Build the populate options based on provided arguments
+    if (populateOptions.fields) {
+      populateOptions.fields.forEach((field) =>
+        query.populate(field, populateOptions.model, populateOptions.options)
+      );
+    }
+
+    const populatedDoc = await query;
+    return populatedDoc as T;
   }
 }

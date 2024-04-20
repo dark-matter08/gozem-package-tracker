@@ -44,6 +44,22 @@
   
   .track-results h2 {
     /* Styles for headers within the results section */
-    margin-bottom: 5px;
+    margin-bottom: 15px;
   }
   
+  .location {
+    background-color: #4CAF50;
+  }
+
+  .package-details-item{
+    width: 100%;
+    min-width: 400px;
+    max-width: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 16px 32px;
+    margin-bottom: 8px;
+    border-radius: 2px;
+    background-color: #EEEEE3;
+  }

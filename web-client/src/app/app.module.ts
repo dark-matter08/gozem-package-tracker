@@ -1,13 +1,15 @@
-import { Component, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AgmCoreModule } from '@agm/core';
 
 import { AppComponent } from './app.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { WebTrackerComponent } from './web-tracker/web-tracker.component';
 import { routes } from './app.routes';
+import { MapComponent } from './map/map.component';
 
 @NgModule({
   imports: [
@@ -16,8 +18,16 @@ import { routes } from './app.routes';
     ReactiveFormsModule,
     FormsModule,
     RouterModule.forRoot(routes),
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyB1-zWe-Xc_GKGtkqSa48POSP0TxJaRK30',
+    }),
   ],
-  declarations: [AppComponent, TopBarComponent, WebTrackerComponent],
+  declarations: [
+    AppComponent,
+    TopBarComponent,
+    WebTrackerComponent,
+    MapComponent,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

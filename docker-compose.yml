@@ -1,6 +1,9 @@
 networks:
   app-network:
     driver: bridge
+volumes:
+  mongo-data:
+    driver: local
 
 services:
   backend:
@@ -85,6 +88,7 @@ services:
     volumes:
       - ./database:/database/
       - ./mongod.conf:/etc/mongod.conf
+      - mongo-data:/data/db
     command: mongod --config /etc/mongod.conf
     environment:
       MONGO_INITDB_ROOT_USERNAME: # DATABASE_NAME

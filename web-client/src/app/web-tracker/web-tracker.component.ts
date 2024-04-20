@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { WebTrackerService } from './web-tracker.service';
 import { FormBuilder } from '@angular/forms';
+// import { Package } from '../../types/package.type';
 
 @Component({
   selector: 'app-package-tracker',
@@ -17,10 +18,25 @@ export class WebTrackerComponent {
     packageId: '',
   });
 
-  onSubmit(): void {
+  packageData: any;
+  deliveryData: any;
+
+  async onSubmit(): Promise<void> {
     // Process checkout data here
 
     console.warn('Your package id has been submitted', this.trackerForm.value);
+    const { packageId } = this.trackerForm.value;
+
+    if (!packageId) {
+      window.alert('Delivery id is required to track package!');
+      return;
+    }
+    this.webTrackerService.trackDelivery(packageId).subscribe((res) => {
+      console.log(res.data);
+      this.packageData = res.data;
+      this.deliveryData = res.data?.active_delivery_id;
+    });
+
     this.trackerForm.reset();
   }
 }
