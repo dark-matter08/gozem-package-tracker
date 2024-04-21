@@ -14,43 +14,63 @@
 
     <button class="track-button" type="submit">Track</button>
   </form>
-  <div *ngIf="packageData" class="track-results">
-    <h2>Package Details</h2>
-    <div class="package-details-item">
-      <span>From: </span>
-      <span
-        >{{ packageData.from_name }} at
-        <span class="location">{{ packageData.from_address }}</span>
-      </span>
-    </div>
-    <div class="package-details-item">
-      <span>To: </span>
-      <span
-        >{{ packageData.to_name }} at
-        <span class="location">{{ packageData.to_address }}</span>
-      </span>
-    </div>
-    <div class="package-details-item">
-      <span>Description: </span>
-      <span>{{ packageData.description }} </span>
-    </div>
-    <div class="package-details-item">
-      <span>Dimensions: </span>
-      <span>
-        <span>{{ packageData.width }} cm </span> W x
-        <span>{{ packageData.height }} cm </span> H x
-        <span>{{ packageData.depth }} cm </span> D,
-        <span>Weight: {{ packageData.weight }} kg </span> W
-      </span>
-    </div>
-    <h2>Delivery Details</h2>
-    <div *ngIf="deliveryData">
+  <div *ngIf="packageData" class="track-body">
+    <div class="track-results">
+      <h2>Package Details</h2>
       <div class="package-details-item">
-        <span>Delivery Status: </span>
-        <span>
-          {{ deliveryData.status }}
+        <span>From: </span>
+        <span
+          >{{ packageData.from_name }} at
+          <span class="location">{{ packageData.from_address }}</span>
         </span>
       </div>
+      <div class="package-details-item">
+        <span>To: </span>
+        <span
+          >{{ packageData.to_name }} at
+          <span class="location">{{ packageData.to_address }}</span>
+        </span>
+      </div>
+      <div class="package-details-item">
+        <span>Description: </span>
+        <span>{{ packageData.description }} </span>
+      </div>
+      <div class="package-details-item">
+        <span>Dimensions: </span>
+        <span>
+          <span>{{ packageData.width }} cm </span> W x
+          <span>{{ packageData.height }} cm </span> H x
+          <span>{{ packageData.depth }} cm </span> D,
+          <span>Weight: {{ packageData.weight }} kg </span> W
+        </span>
+      </div>
+      <h2>Delivery Details</h2>
+      <div *ngIf="deliveryData">
+        <div class="package-details-item">
+          <span>Delivery Status: </span>
+          <span>
+            {{ deliveryData.status }}
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="track-results">
+      <google-map
+        height="400px"
+        width="500px"
+        [center]="center"
+        [zoom]="zoom"
+        (mapClick)="moveMap($event)"
+        (mapMousemove)="move($event)"
+      >
+        <map-marker
+          #marker="mapMarker"
+          *ngFor="let markerPosition of markerPositions"
+          [position]="markerPosition"
+          (mapClick)="openInfoWindow(marker)"
+        ></map-marker>
+        <map-info-window>Info Window content</map-info-window>
+      </google-map>
     </div>
   </div>
 </div>

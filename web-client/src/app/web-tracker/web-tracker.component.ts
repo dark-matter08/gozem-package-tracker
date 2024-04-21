@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { WebTrackerService } from './web-tracker.service';
 import { FormBuilder } from '@angular/forms';
+import { Package } from '../../types/package.type';
+import { Delivery } from '../../types/delivery.type';
+import { MapInfoWindow, MapMarker } from '@angular/google-maps';
 // import { Package } from '../../types/package.type';
 
 @Component({
@@ -9,21 +12,47 @@ import { FormBuilder } from '@angular/forms';
   styleUrls: ['./web-tracker.component.scss'],
 })
 export class WebTrackerComponent {
+  packageData: Package | undefined;
+  deliveryData: Delivery | undefined;
+  center: google.maps.LatLngLiteral;
+  display: any;
+  zoom: number;
+  markerOptions: {};
+  markerPositions: google.maps.LatLngLiteral[];
+
   constructor(
     private webTrackerService: WebTrackerService,
     private formBuilder: FormBuilder
-  ) {}
+  ) {
+    this.center = {
+      lat: 24,
+      lng: 12,
+    };
+    this.zoom = 4;
+    this.markerOptions = {
+      draggable: false,
+    };
+    this.markerPositions = [];
+  }
 
   trackerForm = this.formBuilder.group({
     packageId: '',
   });
 
-  packageData: any;
-  deliveryData: any;
+  ngOnInit(): void {}
+  @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow | undefined;
+
+  moveMap(event: google.maps.MapMouseEvent) {
+    if (event.latLng != null) this.center = event.latLng.toJSON();
+  }
+  move(event: google.maps.MapMouseEvent) {
+    if (event.latLng != null) this.display = event.latLng.toJSON();
+  }
+  openInfoWindow(marker: MapMarker) {
+    if (this.infoWindow != undefined) this.infoWindow.open(marker);
+  }
 
   async onSubmit(): Promise<void> {
-    // Process checkout data here
-
     console.warn('Your package id has been submitted', this.trackerForm.value);
     const { packageId } = this.trackerForm.value;
 
@@ -34,7 +63,24 @@ export class WebTrackerComponent {
     this.webTrackerService.trackDelivery(packageId).subscribe((res) => {
       console.log(res.data);
       this.packageData = res.data;
-      this.deliveryData = res.data?.active_delivery_id;
+      this.deliveryData = res.data?.active_delivery_id as Delivery;
+      this.markerPositions.push(
+        this.packageData?.from_location as google.maps.LatLngLiteral
+      );
+      this.markerPositions.push(
+        this.packageData?.to_location as google.maps.LatLngLiteral
+      );
+
+      if (this.deliveryData) {
+        this.center = this.deliveryData.location;
+        this.markerPositions.push(
+          this.deliveryData.location as google.maps.LatLngLiteral
+        );
+        this.zoom = 15;
+      } else {
+        this.center = this.packageData
+          ?.from_location as google.maps.LatLngLiteral;
+      }
     });
 
     this.trackerForm.reset();

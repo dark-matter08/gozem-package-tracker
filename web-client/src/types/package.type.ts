@@ -1,5 +1,7 @@
+import { Delivery } from './delivery.type';
+
 export interface Package {
-  active_delivery_id?: string;
+  active_delivery_id?: Delivery | string;
   description: string;
   weight: number;
   width: number;

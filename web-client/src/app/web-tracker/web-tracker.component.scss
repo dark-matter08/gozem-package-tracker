@@ -13,6 +13,14 @@
     justify-content: center;
     background-color: red;
   }
+
+  .track-body {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-right: 10;
+    padding-left: 10;
+  }
   
   .package-id-input {
     /* Styles for the input field */
@@ -31,6 +39,7 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    height: 60;
   }
   
   .track-results {

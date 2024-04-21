@@ -3,13 +3,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AgmCoreModule } from '@agm/core';
+// import { AgmCoreModule } from '@agm/core';
 
 import { AppComponent } from './app.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
-import { WebTrackerComponent } from './web-tracker/web-tracker.component';
 import { routes } from './app.routes';
-import { MapComponent } from './map/map.component';
+import { WebsocketService } from './websocket.service';
+import { WebTrackerModule } from './web-tracker/web-tracker.module';
 
 @NgModule({
   imports: [
@@ -18,17 +18,11 @@ import { MapComponent } from './map/map.component';
     ReactiveFormsModule,
     FormsModule,
     RouterModule.forRoot(routes),
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyB1-zWe-Xc_GKGtkqSa48POSP0TxJaRK30',
-    }),
+    WebTrackerModule,
   ],
-  declarations: [
-    AppComponent,
-    TopBarComponent,
-    WebTrackerComponent,
-    MapComponent,
-  ],
+  declarations: [AppComponent, TopBarComponent],
   bootstrap: [AppComponent],
+  providers: [WebsocketService],
 })
 export class AppModule {}
 
