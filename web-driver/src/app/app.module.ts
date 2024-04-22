@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { routes } from './app.routes';
 import { WebTrackerModule } from './web-tracker/web-tracker.module';
+import { WebsocketService } from './websocket.service';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { WebTrackerModule } from './web-tracker/web-tracker.module';
   ],
   declarations: [AppComponent, TopBarComponent],
   bootstrap: [AppComponent],
+  providers: [WebsocketService],
 })
 export class AppModule {}
 

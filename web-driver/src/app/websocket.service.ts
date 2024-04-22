@@ -5,6 +5,34 @@ import * as Rx from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 @Injectable()
 export class WebsocketService {
+  private socket = io('http://localhost:8004');
+
+  joinTunnel(tunnelId: string) {
+    if (this.socket) {
+      this.socket.emit('joinTunnel', {
+        tunnelId: tunnelId,
+      });
+    }
+  }
+
+  broadcastLocation(tunnelId: string, data: any) {
+    this.socket.emit('location_changed', { tunnelId, data });
+  }
+
+  listen() {
+    let observable = new Observable<{
+      tunnelId: String;
+      location: google.maps.LatLngLiteral;
+    }>((observer) => {
+      this.socket.on('location_changed', (data) => {
+        observer.next(data);
+      });
+      return () => {
+        this.socket.disconnect();
+      };
+    });
+    return observable;
+  }
   // private subject: WebSocketSubject<any> | null;
 
   // constructor() {
@@ -14,10 +42,10 @@ export class WebsocketService {
 
   // public connect() {
   //   this.subject = webSocket({
-  //     url: 'ws://localhost:8004',
+  //     url: 'ws://localhost:8005',
   //     openObserver: {
   //       next: () => {
-  //         console.log('connexion ok');
+  //         console.log('connected to socket');
   //       },
   //     },
   //     closeObserver: {
@@ -42,33 +70,33 @@ export class WebsocketService {
   //   this.subject?.complete();
   // }
 
-  private socket: Socket | null;
+  // private socket: Socket | null;
 
-  constructor() {
-    this.socket = null;
-    this.connect();
-  }
+  // constructor() {
+  //   this.socket = null;
+  //   this.connect();
+  // }
 
-  connect() {
-    this.socket = io('http://localhost:8004');
-    console.log('===== Socket Connected =====');
-  }
+  // connect() {
+  //   this.socket = io('http://localhost:8004');
+  //   console.log('===== Socket Connected =====');
+  // }
 
-  disconnect() {
-    if (this.socket) {
-      this.socket.disconnect();
-    }
-  }
+  // disconnect() {
+  //   if (this.socket) {
+  //     this.socket.disconnect();
+  //   }
+  // }
 
-  joinTunnel(tunnelId: string) {
-    if (this.socket) {
-      this.socket.emit('joinTunnel', {
-        tunnelId: tunnelId,
-      });
-    }
-  }
+  // joinTunnel(tunnelId: string) {
+  //   if (this.socket) {
+  //     this.socket.emit('joinTunnel', {
+  //       tunnelId: tunnelId,
+  //     });
+  //   }
+  // }
 
-  getSocket() {
-    return this.socket;
-  }
+  // getSocket() {
+  //   return this.socket;
+  // }
 }

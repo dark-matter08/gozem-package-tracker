@@ -87,19 +87,25 @@ export class WebTrackerComponent {
     });
 
     this.trackerForm.reset();
-    this.wsService.joinTunnel(packageId as string);
+    this.wsService.joinTunnel(packageId);
 
-    const socket = this.wsService.getSocket();
-    socket?.on('connected', (data: { tunnelId: string }) => {
-      console.log('User connected on tunnel: ', data.tunnelId);
+    this.wsService.listen().subscribe((res) => {
+      console.log(res);
     });
 
-    socket?.on(
-      'location_changed',
-      (data: { tunnelId: string; location: google.maps.LatLngLiteral }) => {
-        this.center = data.location;
-        // Todo add code to recalculate poly lines of map
-      }
-    );
+    this.webTrackerService.getLocationAndBroadcast(packageId);
+
+    // const socket = this.wsService.getSocket();
+    // socket?.on('connected', (data: { tunnelId: string }) => {
+    //   console.log('User connected on tunnel: ', data.tunnelId);
+    // });
+
+    // socket?.on(
+    //   'location_changed',
+    //   (data: { tunnelId: string; location: google.maps.LatLngLiteral }) => {
+    //     this.center = data.location;
+    //     // Todo add code to recalculate poly lines of map
+    //   }
+    // );
   }
 }
