@@ -26,6 +26,8 @@ export default class PackageService {
   public async getOpenPackages(): Promise<ServiceResponse<Package[]>> {
     const packages = await this.mongoService.read({ active_delivery_id: null });
 
+    console.log(packages);
+
     // ToDo: Paginate data
     return {
       status: ResponseCode.HTTP_200_OK,

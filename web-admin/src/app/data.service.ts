@@ -25,7 +25,7 @@ export class DataService {
 
   getOpenPackages() {
     return this.http.get<Response<Package[]>>(
-      `http://localhost:8004/api/v1/package/open`
+      `http://localhost:8004/api/v1/package/open/packages`
     );
   }
 

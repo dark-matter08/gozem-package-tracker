@@ -1,1 +1,16 @@
-<p>delivery works!</p>
+<div class="delivery-body">
+  <h2>Create Delivery</h2>
+  <form
+    [formGroup]="createDeliveryForm"
+    (ngSubmit)="onSubmit()"
+    class="create-delivery-form"
+  >
+    <select formControlName="packageId">
+      <option value="">Select Package</option>
+      <option *ngFor="let package of openPackages" value="{{ package._id }}">
+        {{ package.description }}
+      </option>
+    </select>
+    <button class="create-package-button" type="submit">Submit</button>
+  </form>
+</div>

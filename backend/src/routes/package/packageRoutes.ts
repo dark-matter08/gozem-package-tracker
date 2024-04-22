@@ -70,12 +70,14 @@ export default class PackageRoutes {
         res.status(500).send({ status: 500, message: 'unknown Error' });
       }
     });
-    this.router.get('/open', async (req, res, _next) => {
+    this.router.get('/open/packages', async (_req, res, _next) => {
       try {
         const result = await this.packageController.getOpenPackages();
         res.status(result.status as number).send(result);
       } catch (e) {
-        res.status(500).send({ status: 500, message: 'unknown Error' });
+        console.log(e);
+
+        res.status(500).send({ status: 500, message: e });
       }
     });
   }
