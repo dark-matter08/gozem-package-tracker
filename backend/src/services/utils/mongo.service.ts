@@ -4,10 +4,16 @@ import { ObjectId, Document } from '../../mongodb';
 export interface IModelService<T> {
   create(data: Partial<T>): Promise<T>;
   read(filter?: any): Promise<T[]>;
+  readOne(filter?: any): Promise<T | null>;
   readById(id: string): Promise<T | null>;
   update(id: string, data: Partial<T>): Promise<T | null>;
   delete(id: string): Promise<void>;
-  populate(id: string, populateOptions: PopulateOptions): Promise<T | null>;
+  populate(populateOptions: PopulateOptions, filter?: any): Promise<T | null>;
+  populateById(id: string, populateOptions: PopulateOptions): Promise<T | null>;
+  populateOne(
+    populateOptions: PopulateOptions,
+    filter?: any
+  ): Promise<T | null>;
 }
 
 export class PopulateOptions {
@@ -31,6 +37,10 @@ export class MongoService<T> implements IModelService<T> {
     return this.model.find(filter);
   }
 
+  async readOne(filter?: any): Promise<T | null> {
+    return this.model.findOne(filter);
+  }
+
   async readById(id: string): Promise<T | null> {
     return this.model.findById(new ObjectId(id));
   }
@@ -44,10 +54,44 @@ export class MongoService<T> implements IModelService<T> {
   }
 
   async populate(
+    populateOptions: PopulateOptions,
+    filter?: any
+  ): Promise<T | null> {
+    const query = this.model.find(filter);
+
+    // Build the populate options based on provided arguments
+    if (populateOptions.fields) {
+      populateOptions.fields.forEach((field) =>
+        query.populate(field, populateOptions.model, populateOptions.options)
+      );
+    }
+
+    const populatedDoc = await query;
+    return populatedDoc as T;
+  }
+
+  async populateById(
     id: string,
     populateOptions: PopulateOptions
   ): Promise<T | null> {
     const query = this.model.findById(new ObjectId(id));
+
+    // Build the populate options based on provided arguments
+    if (populateOptions.fields) {
+      populateOptions.fields.forEach((field) =>
+        query.populate(field, populateOptions.model, populateOptions.options)
+      );
+    }
+
+    const populatedDoc = await query;
+    return populatedDoc as T;
+  }
+
+  async populateOne(
+    populateOptions: PopulateOptions,
+    filter?: any
+  ): Promise<T | null> {
+    const query = this.model.findOne(filter);
 
     // Build the populate options based on provided arguments
     if (populateOptions.fields) {

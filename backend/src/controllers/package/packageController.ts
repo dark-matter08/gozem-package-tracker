@@ -1,7 +1,7 @@
 import { Body, Delete, Example, Get, Path, Post, Put, Route, Tags } from 'tsoa';
 import { PackageService } from '../../services';
 import { ServiceResponse } from '../../utils';
-import { Package } from '../../types/package.type';
+import { Package, PackageInput } from '../../types/package.type';
 
 @Route('/api/v1/package')
 @Tags('Package Controller Operations')
@@ -62,6 +62,55 @@ export default class PackageController {
     return this.packageService.getAllPackages();
   }
 
+  @Example<ServiceResponse<Partial<Package>[]>>({
+    status: 200,
+    message: 'success',
+    data: [
+      {
+        description: 'hello 00000xxx000',
+        weight: 32,
+        width: 12,
+        height: 43,
+        depth: 19,
+        from_name: 'xxxxhimxxxxx',
+        from_address: 'xxxxxfromxxxxx',
+        from_location: {
+          lat: 41.2222,
+          lng: 45.12112,
+        },
+        to_name: 'xxxxxherxxxxx',
+        to_address: 'xxxxxxwherexxx',
+        to_location: {
+          lat: 21.1212,
+          lng: 32.12121,
+        },
+      },
+      {
+        description: 'shoksssss 00000xxx000',
+        weight: 32,
+        width: 12,
+        height: 43,
+        depth: 19,
+        from_name: 'xxxxherxxxxx',
+        from_address: 'xxxxxfromxxxxx',
+        from_location: {
+          lat: 41.2222,
+          lng: 45.12112,
+        },
+        to_name: 'xxxxxhimxxxxx',
+        to_address: 'xxxxxxwherexxx',
+        to_location: {
+          lat: 21.1212,
+          lng: 32.12121,
+        },
+      },
+    ],
+  })
+  @Get('/')
+  public async getOpenPackages(): Promise<ServiceResponse<Package[]>> {
+    return this.packageService.getOpenPackages();
+  }
+
   @Example<ServiceResponse<Partial<Package>>>({
     status: 200,
     message: 'success',
@@ -117,7 +166,7 @@ export default class PackageController {
   })
   @Post('/create')
   public async createNewPackage(
-    @Body() data: Partial<Package>
+    @Body() data: PackageInput
   ): Promise<ServiceResponse<Package>> {
     return this.packageService.createNewPackage(data);
   }
@@ -162,5 +211,35 @@ export default class PackageController {
     @Path() packageId: string
   ): Promise<ServiceResponse<Package>> {
     return this.packageService.deletePackage(packageId);
+  }
+
+  @Example<ServiceResponse<Partial<Package>>>({
+    status: 200,
+    message: 'success',
+    data: {
+      description: 'hello 00000xxx000',
+      weight: 32,
+      width: 12,
+      height: 43,
+      depth: 19,
+      from_name: 'xxxxhimxxxxx',
+      from_address: 'xxxxxfromxxxxx',
+      from_location: {
+        lat: 41.2222,
+        lng: 45.12112,
+      },
+      to_name: 'xxxxxherxxxxx',
+      to_address: 'xxxxxxwherexxx',
+      to_location: {
+        lat: 21.1212,
+        lng: 32.12121,
+      },
+    },
+  })
+  @Get('/track/{packageId}')
+  public async trackPackage(
+    @Path() packageId: string
+  ): Promise<ServiceResponse<Package>> {
+    return this.packageService.trackPackage(packageId);
   }
 }

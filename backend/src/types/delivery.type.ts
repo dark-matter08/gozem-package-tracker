@@ -1,3 +1,5 @@
+import { Package } from '../models';
+
 export interface Delivery {
   delivery_id: string;
   package_id?: string;
@@ -10,3 +12,14 @@ export interface Delivery {
   };
   status: string;
 }
+
+export type DeliveryInput = Omit<
+  Delivery,
+  | 'delivery_id'
+  | 'end_time'
+  | 'package'
+  | 'pickup_time'
+  | 'start_time'
+  | 'location'
+  | 'status'
+>;

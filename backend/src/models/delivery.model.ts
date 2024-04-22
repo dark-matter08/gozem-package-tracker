@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { Types, Schema, model } from '../mongodb';
+import { DeliveryStatus } from '../utils/enums';
 
 const deliverySchema = new Schema<Delivery>({
   package_id: { type: Schema.Types.ObjectId, ref: 'Package', required: true },
@@ -13,8 +14,8 @@ const deliverySchema = new Schema<Delivery>({
   },
   status: {
     type: String,
-    enum: ['open', 'picked-up', 'in-transit', 'delivered', 'failed'],
-    default: 'open',
+    enum: DeliveryStatus,
+    default: DeliveryStatus.open,
   },
 });
 

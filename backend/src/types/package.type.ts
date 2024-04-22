@@ -1,3 +1,5 @@
+import { Delivery } from '../models';
+
 export interface Package {
   package_id: string;
   active_delivery_id?: string;
@@ -19,3 +21,8 @@ export interface Package {
     lng: number;
   };
 }
+
+export type PackageInput = Omit<
+  Package,
+  'package_id' | 'active_delivery_id' | 'active_delivery'
+>;

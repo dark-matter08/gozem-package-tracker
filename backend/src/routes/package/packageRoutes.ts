@@ -60,5 +60,23 @@ export default class PackageRoutes {
         res.status(500).send({ status: 500, message: 'unknown Error' });
       }
     });
+    this.router.get('/track/:packageId', async (req, res, _next) => {
+      try {
+        const result = await this.packageController.trackPackage(
+          req.params.packageId
+        );
+        res.status(result.status as number).send(result);
+      } catch (e) {
+        res.status(500).send({ status: 500, message: 'unknown Error' });
+      }
+    });
+    this.router.get('/open', async (req, res, _next) => {
+      try {
+        const result = await this.packageController.getOpenPackages();
+        res.status(result.status as number).send(result);
+      } catch (e) {
+        res.status(500).send({ status: 500, message: 'unknown Error' });
+      }
+    });
   }
 }

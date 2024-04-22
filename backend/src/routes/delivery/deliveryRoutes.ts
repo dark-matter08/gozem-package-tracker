@@ -67,6 +67,16 @@ export default class DeliveryRoutes {
         res.status(500).send({ status: 500, message: 'unknown Error' });
       }
     });
+    this.router.get('/track/:deliveryId', async (req, res, _next) => {
+      try {
+        const result = await this.deliveryController.deleteDelivery(
+          req.params.deliveryId
+        );
+        res.status(result.status as number).send(result);
+      } catch (error) {
+        res.status(500).send({ status: 500, message: 'unknown Error' });
+      }
+    });
     this.router.post('/update-location/:id', async (req, res, _next) => {
       try {
         // const result = await this.deliveryController.updateDeliveryLocation(
