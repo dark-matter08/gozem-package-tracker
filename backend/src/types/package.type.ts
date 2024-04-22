@@ -1,4 +1,5 @@
 export interface Package {
+  package_id: string;
   active_delivery_id?: string;
   description: string;
   weight: number;

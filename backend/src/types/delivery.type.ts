@@ -1,4 +1,5 @@
 export interface Delivery {
+  delivery_id: string;
   package_id?: string;
   pickup_time?: Date;
   start_time?: Date;

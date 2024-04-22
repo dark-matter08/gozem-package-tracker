@@ -11,9 +11,9 @@ export class WebTrackerService {
   runLoop: any;
   constructor(private http: HttpClient, private wsService: WebsocketService) {}
 
-  trackDelivery(packageId: string) {
+  trackDelivery(deliveryId: string) {
     return this.http.get<Response<Package>>(
-      `http://localhost:8004/api/v1/package/${packageId}`
+      `http://localhost:8004/api/v1/delivery/${deliveryId}`
     );
   }
 

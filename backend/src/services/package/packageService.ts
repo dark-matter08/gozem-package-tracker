@@ -8,6 +8,8 @@ export default class PackageService {
   constructor() {
     this.mongoService = new MongoService<PackageType>(PackageModel);
   }
+
+  
   public async getAllPackages(): Promise<ServiceResponse<Package[]>> {
     const packages = await this.mongoService.read();
 

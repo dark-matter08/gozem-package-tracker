@@ -8,6 +8,7 @@ const packageSchema = new Schema<Package>({
     required: false,
   },
   description: String,
+  package_id: { type: String, required: true },
   weight: { type: Number, required: true },
   width: { type: Number, required: true },
   height: { type: Number, required: true },
@@ -28,6 +29,7 @@ const packageSchema = new Schema<Package>({
 
 export interface Package extends mongoose.Document {
   _id?: string;
+  package_id: string;
   active_delivery_id?: Types.ObjectId;
   description: string;
   weight: number;

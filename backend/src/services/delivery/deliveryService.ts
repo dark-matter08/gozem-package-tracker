@@ -11,6 +11,7 @@ export default class DeliveryService {
     this.mongoService = new MongoService<DeliveryType>(DeliveryModel);
     this.packageService = new PackageService();
   }
+
   public async getAllDeliveries(): Promise<ServiceResponse<Delivery[]>> {
     const deliveries = await this.mongoService.read();
 
@@ -25,7 +26,9 @@ export default class DeliveryService {
   public async getDeliveryById(
     deliveryId: string
   ): Promise<ServiceResponse<Delivery>> {
-    const deliveryItem = await this.mongoService.readById(deliveryId);
+    const deliveryItem = await this.mongoService.populate(deliveryId, {
+      fields: ['package_id'],
+    });
     if (deliveryItem) {
       return {
         status: ResponseCode.HTTP_200_OK,

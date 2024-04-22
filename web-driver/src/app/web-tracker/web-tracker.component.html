@@ -8,11 +8,11 @@
       id="packageId"
       type="text"
       formControlName="packageId"
-      placeholder="Enter Package Id"
+      placeholder="Enter Delivery ID"
       class="package-id-input"
     />
 
-    <button class="track-button" type="submit">Track</button>
+    <button class="track-button" type="submit">Submit</button>
   </form>
   <div class="track-body">
     <div *ngIf="packageData" class="track-results">
@@ -56,12 +56,12 @@
     </div>
     <google-map
       *ngIf="packageData"
-      height="400px"
-      width="500px"
       [center]="center"
       [zoom]="zoom"
       (mapClick)="moveMap($event)"
       (mapMousemove)="move($event)"
+      width="100%"
+      height="100%"
     >
       <map-marker
         #marker="mapMarker"
@@ -72,10 +72,13 @@
       <map-info-window>Info Window content</map-info-window>
     </google-map>
     <div *ngIf="packageData" class="track-buttons-right">
-      <button>Track</button>
-      <button>Track</button>
-      <button>Track</button>
-      <button>Track</button>
+      <div class="right-header">
+        <h1>Action Buttons</h1>
+      </div>
+      <button class="action-button pick-up">Picked Up</button>
+      <button class="action-button transit">In Trasit</button>
+      <button class="action-button delivered">Delivered</button>
+      <button class="action-button failed">Failed</button>
     </div>
   </div>
 </div>

@@ -4,6 +4,7 @@ import { Types, Schema, model } from '../mongodb';
 const deliverySchema = new Schema<Delivery>({
   package_id: { type: Schema.Types.ObjectId, ref: 'Package', required: true },
   pickup_time: Date,
+  delivery_id: { type: String, required: true },
   start_time: { type: Date, default: Date.now },
   end_time: Date,
   location: {
@@ -19,6 +20,7 @@ const deliverySchema = new Schema<Delivery>({
 
 export interface Delivery extends mongoose.Document {
   _id?: string;
+  delivery_id: string;
   package_id?: Types.ObjectId;
   pickup_time: Date;
   start_time: Date;
