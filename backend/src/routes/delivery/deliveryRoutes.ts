@@ -69,7 +69,7 @@ export default class DeliveryRoutes {
     });
     this.router.get('/track/:deliveryId', async (req, res, _next) => {
       try {
-        const result = await this.deliveryController.deleteDelivery(
+        const result = await this.deliveryController.trackDelivery(
           req.params.deliveryId
         );
         res.status(result.status as number).send(result);

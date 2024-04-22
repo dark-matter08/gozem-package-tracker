@@ -3,6 +3,7 @@ import io, { Socket } from 'socket.io-client';
 import { Observable } from 'rxjs';
 import * as Rx from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
+import { DeliveryStatus } from '../types/enums';
 @Injectable()
 export class WebsocketService {
   private socket = io('http://localhost:8004');
@@ -15,16 +16,20 @@ export class WebsocketService {
     }
   }
 
-  broadcastLocation(tunnelId: string, data: any) {
-    this.socket.emit('location_changed', { tunnelId, data });
+  broadCastDeliveryData(
+    tunnelId: string,
+    location?: google.maps.LatLngLiteral,
+    status?: DeliveryStatus
+  ) {
+    this.socket.emit('delivery_updated', { tunnelId, location, status });
   }
 
-  listen() {
+  listen(event: string) {
     let observable = new Observable<{
       tunnelId: String;
       location: google.maps.LatLngLiteral;
     }>((observer) => {
-      this.socket.on('location_changed', (data) => {
+      this.socket.on(event, (data) => {
         observer.next(data);
       });
       return () => {

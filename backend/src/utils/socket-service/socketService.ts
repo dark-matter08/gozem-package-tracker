@@ -30,6 +30,8 @@ export default class SocketService {
 
       this.socket?.join(data.tunnelId);
       this.socket?.emit('connected', data);
+      console.log('========== [Tunnel Joined] ==============');
+      console.log(this.activeTunnel);
     });
 
     // Handle disconnection
@@ -45,9 +47,18 @@ export default class SocketService {
       }
     });
 
-    this.socket?.on('location_changed', (data) => {
-      const { tunnelId, location } = data;
-      this.io.to(tunnelId).emit('location_changed', { tunnelId, location });
+    this.socket?.on('delivery_updated', (data) => {
+      const { tunnelId, location, status } = data;
+      console.log('======> getting new location data: ', data);
+      const tunnelSockets = this.activeTunnel[tunnelId] || [];
+      tunnelSockets.forEach((socketId) => {
+        if (location) {
+          this.io.to(socketId).emit('location_changed', { tunnelId, location });
+        }
+        if (status) {
+          this.io.to(socketId).emit('status_changed', { tunnelId, status });
+        }
+      });
     });
 
     this.socket?.on('status_changed', (data) => {
@@ -56,16 +67,6 @@ export default class SocketService {
 
     this.socket?.on('delivery_updated', (data) => {
       this.io.emit('delivery_updated', { data });
-    });
-
-    this.socket?.on('sendMessage-singleBroadcast', (data) => {
-      const { roomId, message } = data;
-      const roomSockets = this.activeTunnel[roomId] || [];
-
-      // Iterate over each socket ID in the room and send the message individually
-      roomSockets.forEach((socketId) => {
-        this.io.to(socketId).emit('newMessage', { roomId, message });
-      });
     });
   }
 }

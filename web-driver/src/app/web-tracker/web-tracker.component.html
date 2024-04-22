@@ -5,10 +5,10 @@
     class="package-tracker"
   >
     <input
-      id="packageId"
+      id="deliveryId"
       type="text"
-      formControlName="packageId"
-      placeholder="Enter Delivery ID"
+      formControlName="deliveryId"
+      placeholder="Enter Delivery ID. Ex: DEL-...."
       class="package-id-input"
     />
 
@@ -75,10 +75,16 @@
       <div class="right-header">
         <h1>Action Buttons</h1>
       </div>
-      <button class="action-button pick-up">Picked Up</button>
-      <button class="action-button transit">In Trasit</button>
-      <button class="action-button delivered">Delivered</button>
-      <button class="action-button failed">Failed</button>
+      <button class="action-button pick-up" (click)="pickUp()">
+        Picked Up
+      </button>
+      <button class="action-button transit" (click)="inTransit()">
+        In Transit
+      </button>
+      <button class="action-button delivered" (click)="deliver()">
+        Delivered
+      </button>
+      <button class="action-button failed" (click)="fail()">Failed</button>
     </div>
   </div>
 </div>

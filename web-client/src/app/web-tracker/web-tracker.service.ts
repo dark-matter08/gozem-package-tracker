@@ -11,7 +11,7 @@ export class WebTrackerService {
 
   trackDelivery(packageId: string) {
     return this.http.get<Response<Package>>(
-      `http://localhost:8004/api/v1/package/${packageId}`
+      `http://localhost:8004/api/v1/package/track/${packageId}`
     );
   }
 

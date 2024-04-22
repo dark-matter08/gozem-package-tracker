@@ -8,7 +8,7 @@
       id="packageId"
       type="text"
       formControlName="packageId"
-      placeholder="Enter Package Id"
+      placeholder="Enter Package Id. Ex: PAK-..."
       class="package-id-input"
     />
 
@@ -18,30 +18,30 @@
     <div *ngIf="packageData" class="track-results">
       <h2>Package Details</h2>
       <div class="package-details-item">
-        <span>From: </span>
+        <span class="dms-title">From: </span>
         <span
           >{{ packageData.from_name }} at
           <span class="location">{{ packageData.from_address }}</span>
         </span>
       </div>
       <div class="package-details-item">
-        <span>To: </span>
+        <span class="dms-title">To: </span>
         <span
           >{{ packageData.to_name }} at
           <span class="location">{{ packageData.to_address }}</span>
         </span>
       </div>
       <div class="package-details-item">
-        <span>Description: </span>
+        <span class="dms-title">Description: </span>
         <span>{{ packageData.description }} </span>
       </div>
       <div class="package-details-item">
-        <span>Dimensions: </span>
+        <span class="dms-title">Dimensions: </span>
         <span>
-          <span>{{ packageData.width }} cm </span> W x
-          <span>{{ packageData.height }} cm </span> H x
-          <span>{{ packageData.depth }} cm </span> D,
-          <span>Weight: {{ packageData.weight }} kg </span> W
+          <div>Width: {{ packageData.width }} cm</div>
+          <div>Height: {{ packageData.height }} cm</div>
+          <div>Depth: {{ packageData.depth }} cm</div>
+          <div>Weight: {{ packageData.weight }} kg</div>
         </span>
       </div>
       <h2>Delivery Details</h2>
@@ -49,7 +49,7 @@
         <div class="package-details-item">
           <span>Delivery Status: </span>
           <span>
-            {{ deliveryData.status }}
+            {{ packageStatus }}
           </span>
         </div>
       </div>

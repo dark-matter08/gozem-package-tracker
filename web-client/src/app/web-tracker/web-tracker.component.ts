@@ -5,6 +5,7 @@ import { Package } from '../../types/package.type';
 import { Delivery } from '../../types/delivery.type';
 import { MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { WebsocketService } from '../websocket.service';
+import { DeliveryStatus, ListeningEvents } from '../../types/enums';
 // import { Package } from '../../types/package.type';
 
 @Component({
@@ -20,6 +21,11 @@ export class WebTrackerComponent {
   zoom: number;
   markerOptions: {};
   markerPositions: google.maps.LatLngLiteral[];
+  @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow | undefined;
+  trackerForm = this.formBuilder.group({
+    packageId: '',
+  });
+  packageStatus: string;
 
   constructor(
     private webTrackerService: WebTrackerService,
@@ -35,14 +41,20 @@ export class WebTrackerComponent {
       draggable: false,
     };
     this.markerPositions = [];
+    this.packageStatus = DeliveryStatus.open;
   }
 
-  trackerForm = this.formBuilder.group({
-    packageId: '',
-  });
+  ngOnInit(): void {
+    this.wsService.listen(ListeningEvents.location_changed).subscribe((res) => {
+      console.log('Receiving new location: ', res.location);
+      this.center = res.location as google.maps.LatLngLiteral;
+    });
 
-  ngOnInit(): void {}
-  @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow | undefined;
+    this.wsService.listen(ListeningEvents.status_changed).subscribe((res) => {
+      console.log('Receiving new status: ', res.status?.toUpperCase());
+      this.packageStatus = res.status as string;
+    });
+  }
 
   moveMap(event: google.maps.MapMouseEvent) {
     if (event.latLng != null) this.center = event.latLng.toJSON();
@@ -75,11 +87,17 @@ export class WebTrackerComponent {
       );
 
       if (this.deliveryData) {
+        this.packageStatus = this.deliveryData.status;
         this.center = this.deliveryData.location;
         this.markerPositions.push(
           this.deliveryData.location as google.maps.LatLngLiteral
         );
         this.zoom = 15;
+        if (this.packageData?._id) {
+          console.log('Joining tunnel on: ', this.packageData?._id);
+
+          this.wsService.joinTunnel(this.packageData?._id);
+        }
       } else {
         this.center = this.packageData
           ?.from_location as google.maps.LatLngLiteral;
@@ -87,13 +105,6 @@ export class WebTrackerComponent {
     });
 
     this.trackerForm.reset();
-    this.wsService.joinTunnel(packageId);
-
-    this.wsService.listen().subscribe((res) => {
-      console.log(res);
-    });
-
-    this.webTrackerService.getLocationAndBroadcast();
 
     // const socket = this.wsService.getSocket();
     // socket?.on('connected', (data: { tunnelId: string }) => {

@@ -106,7 +106,7 @@ export default class PackageController {
       },
     ],
   })
-  @Get('/')
+  @Get('/open')
   public async getOpenPackages(): Promise<ServiceResponse<Package[]>> {
     return this.packageService.getOpenPackages();
   }

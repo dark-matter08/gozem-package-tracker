@@ -2,6 +2,7 @@ import { Delivery } from './delivery.type';
 
 export interface Package {
   _id: string;
+  package_id: string;
   active_delivery_id?: Delivery | string;
   description: string;
   weight: number;
