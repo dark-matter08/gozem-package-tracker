@@ -3,14 +3,14 @@ import http from 'http';
 
 export default class SocketService {
   public socket: Socket | null;
-  private activeRooms: {};
+  private activeTunnel: {};
   public io: Server;
   public server: http.Server;
   constructor(app: Express.Application) {
     this.server = http.createServer(app);
     this.io = new Server(this.server, { cors: { origin: '*' } });
     this.socket = null;
-    this.activeRooms = {};
+    this.activeTunnel = {};
     console.log('[🚀 ] - Socket Server Started ');
 
     this.io.on('connection', (socket: Socket) => {
@@ -22,22 +22,23 @@ export default class SocketService {
 
   private startSocketListeners() {
     // Join room
-    this.socket?.on('joinRoom', (roomId) => {
-      this.activeRooms[roomId] = [
-        ...(this.activeRooms?.[roomId] || []),
+    this.socket?.on('joinTunnel', (data) => {
+      this.activeTunnel[data.tunnelId] = [
+        ...(this.activeTunnel?.[data.tunnelId] || []),
         this.socket?.id,
       ];
-      this.socket?.join(roomId);
-      this.socket?.emit('connected', { roomId });
+
+      this.socket?.join(data.tunnelId);
+      this.socket?.emit('connected', data);
     });
 
     // Handle disconnection
     this.socket?.on('disconnect', () => {
       // Loop through active rooms
-      for (const roomId in this.activeRooms) {
-        if (Object.prototype.hasOwnProperty.call(this.activeRooms, roomId)) {
+      for (const roomId in this.activeTunnel) {
+        if (Object.prototype.hasOwnProperty.call(this.activeTunnel, roomId)) {
           // Remove disconnected socket from activeRooms for each room
-          this.activeRooms[roomId] = this.activeRooms[roomId].filter(
+          this.activeTunnel[roomId] = this.activeTunnel[roomId].filter(
             (socketId) => socketId !== this.socket?.id
           );
         }
@@ -45,7 +46,8 @@ export default class SocketService {
     });
 
     this.socket?.on('location_changed', (data) => {
-      this.io.emit('location_changed', { data });
+      const { tunnelId, location } = data;
+      this.io.to(tunnelId).emit('location_changed', { tunnelId, location });
     });
 
     this.socket?.on('status_changed', (data) => {
@@ -56,16 +58,9 @@ export default class SocketService {
       this.io.emit('delivery_updated', { data });
     });
 
-    this.socket?.on('sendMessage', (data) => {
-      const { roomId, message } = data;
-      console.log('Sending ', message, ' to room: ', roomId);
-
-      this.io.to(roomId).emit('newMessage', { roomId, message });
-    });
-
     this.socket?.on('sendMessage-singleBroadcast', (data) => {
       const { roomId, message } = data;
-      const roomSockets = this.activeRooms[roomId] || [];
+      const roomSockets = this.activeTunnel[roomId] || [];
 
       // Iterate over each socket ID in the room and send the message individually
       roomSockets.forEach((socketId) => {

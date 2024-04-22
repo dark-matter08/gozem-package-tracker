@@ -16,7 +16,7 @@ export default class PackageRoutes {
         const result = await this.packageController.getAllPackages();
         res.status(result.status as number).send(result);
       } catch (e) {
-        res.status(500).send({ error: 'unknown Error' });
+        res.status(500).send({ status: 500, message: 'unknown Error' });
       }
     });
     this.router.get('/:id', async (req, res, _next) => {
@@ -26,7 +26,7 @@ export default class PackageRoutes {
         );
         res.status(result.status as number).send(result);
       } catch (e) {
-        res.status(500).send({ error: 'unknown Error' });
+        res.status(500).send({ status: 500, message: 'unknown Error' });
       }
     });
     this.router.post('/create', async (req, res, _next) => {
@@ -36,7 +36,7 @@ export default class PackageRoutes {
       } catch (e) {
         console.log(e);
 
-        res.status(500).send({ error: 'unknown Error' });
+        res.status(500).send({ status: 500, message: 'unknown Error' });
       }
     });
     this.router.put('/:id', async (req, res, _next) => {
@@ -47,7 +47,7 @@ export default class PackageRoutes {
         );
         res.status(result.status as number).send(result);
       } catch (e) {
-        res.status(500).send({ error: 'unknown Error' });
+        res.status(500).send({ status: 500, message: 'unknown Error' });
       }
     });
     this.router.delete('/:id', async (req, res, _next) => {
@@ -57,7 +57,7 @@ export default class PackageRoutes {
         );
         res.status(result.status as number).send(result);
       } catch (e) {
-        res.status(500).send({ error: 'unknown Error' });
+        res.status(500).send({ status: 500, message: 'unknown Error' });
       }
     });
   }

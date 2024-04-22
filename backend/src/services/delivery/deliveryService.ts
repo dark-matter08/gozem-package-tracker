@@ -114,4 +114,39 @@ export default class DeliveryService {
       };
     }
   }
+
+  public async updateDeliveryLocation(
+    packageId: string,
+    data: { location: { lat: number; lng: number } }
+  ): Promise<ServiceResponse<Delivery>> {
+    const findDelivery = await this.mongoService.read({
+      package_id: packageId,
+    });
+
+    if (findDelivery.length < 1) {
+      return {
+        status: ResponseCode.HTTP_404_NOT_FOUND,
+        message: `Delivery with package id: ${packageId} not found`,
+      };
+    }
+    const deliveryItem = await this.mongoService.update(
+      findDelivery[0]._id as string,
+      {
+        location: data.location,
+      }
+    );
+
+    if (deliveryItem) {
+      return {
+        status: ResponseCode.HTTP_200_OK,
+        message: `delivery with package id : ${packageId} has been update`,
+        data: deliveryItem as Delivery,
+      };
+    }
+
+    return {
+      status: ResponseCode.HTTP_404_NOT_FOUND,
+      message: `delivery with package: ${packageId} could not be updated`,
+    };
+  }
 }

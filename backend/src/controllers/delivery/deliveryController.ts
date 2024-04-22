@@ -123,4 +123,12 @@ export default class DeliveryController {
   ): Promise<ServiceResponse<Delivery>> {
     return this.deliveryService.deleteDelivery(deliveryId);
   }
+
+  @Post('/update-location/{packageId}')
+  public async updateDeliveryLocation(
+    @Path() packageId: string,
+    @Body() data: { location: { lat: number; lng: number } }
+  ): Promise<ServiceResponse<Delivery>> {
+    return this.deliveryService.updateDeliveryLocation(packageId, data);
+  }
 }
