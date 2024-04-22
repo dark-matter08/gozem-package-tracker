@@ -56,12 +56,12 @@
     </div>
     <google-map
       *ngIf="packageData"
-      height="400px"
-      width="500px"
       [center]="center"
       [zoom]="zoom"
       (mapClick)="moveMap($event)"
       (mapMousemove)="move($event)"
+      width="100%"
+      height="100%"
     >
       <map-marker
         #marker="mapMarker"

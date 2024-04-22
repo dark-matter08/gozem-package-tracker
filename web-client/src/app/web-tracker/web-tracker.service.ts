@@ -14,6 +14,21 @@ export class WebTrackerService {
       `http://localhost:8004/api/v1/package/${packageId}`
     );
   }
+
+  getLocationAndBroadcast(): void {
+    if (navigator.geolocation) {
+      let latitude;
+      let longitude;
+      navigator.geolocation.getCurrentPosition((position) => {
+        longitude = position.coords.longitude;
+        latitude = position.coords.latitude;
+
+        console.log(latitude, longitude);
+      });
+    } else {
+      console.log('No support for geolocation');
+    }
+  }
 }
 
 /*

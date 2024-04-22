@@ -1,0 +1,995 @@
+{
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"Health": {
+				"properties": {
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"Package": {
+				"properties": {
+					"active_delivery_id": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"weight": {
+						"type": "number",
+						"format": "double"
+					},
+					"width": {
+						"type": "number",
+						"format": "double"
+					},
+					"height": {
+						"type": "number",
+						"format": "double"
+					},
+					"depth": {
+						"type": "number",
+						"format": "double"
+					},
+					"from_name": {
+						"type": "string"
+					},
+					"from_address": {
+						"type": "string"
+					},
+					"from_location": {
+						"properties": {
+							"lng": {
+								"type": "number",
+								"format": "double"
+							},
+							"lat": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"lng",
+							"lat"
+						],
+						"type": "object"
+					},
+					"to_name": {
+						"type": "string"
+					},
+					"to_address": {
+						"type": "string"
+					},
+					"to_location": {
+						"properties": {
+							"lng": {
+								"type": "number",
+								"format": "double"
+							},
+							"lat": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"lng",
+							"lat"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"description",
+					"weight",
+					"width",
+					"height",
+					"depth",
+					"from_name",
+					"from_address",
+					"from_location",
+					"to_name",
+					"to_address",
+					"to_location"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"ServiceResponse_Package-Array_": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"status": {
+						"type": "number",
+						"format": "double"
+					},
+					"data": {
+						"items": {
+							"$ref": "#/components/schemas/Package"
+						},
+						"type": "array"
+					}
+				},
+				"type": "object",
+				"additionalProperties": true
+			},
+			"ServiceResponse_Package_": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"status": {
+						"type": "number",
+						"format": "double"
+					},
+					"data": {
+						"$ref": "#/components/schemas/Package"
+					}
+				},
+				"type": "object",
+				"additionalProperties": true
+			},
+			"Partial_Package_": {
+				"properties": {
+					"active_delivery_id": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"weight": {
+						"type": "number",
+						"format": "double"
+					},
+					"width": {
+						"type": "number",
+						"format": "double"
+					},
+					"height": {
+						"type": "number",
+						"format": "double"
+					},
+					"depth": {
+						"type": "number",
+						"format": "double"
+					},
+					"from_name": {
+						"type": "string"
+					},
+					"from_address": {
+						"type": "string"
+					},
+					"from_location": {
+						"properties": {
+							"lng": {
+								"type": "number",
+								"format": "double"
+							},
+							"lat": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"lng",
+							"lat"
+						],
+						"type": "object"
+					},
+					"to_name": {
+						"type": "string"
+					},
+					"to_address": {
+						"type": "string"
+					},
+					"to_location": {
+						"properties": {
+							"lng": {
+								"type": "number",
+								"format": "double"
+							},
+							"lat": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"lng",
+							"lat"
+						],
+						"type": "object"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
+			"Delivery": {
+				"properties": {
+					"package_id": {
+						"type": "string"
+					},
+					"pickup_time": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"start_time": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"end_time": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"location": {
+						"properties": {
+							"lng": {
+								"type": "number",
+								"format": "double"
+							},
+							"lat": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"lng",
+							"lat"
+						],
+						"type": "object"
+					},
+					"status": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"location",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"ServiceResponse_Delivery-Array_": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"status": {
+						"type": "number",
+						"format": "double"
+					},
+					"data": {
+						"items": {
+							"$ref": "#/components/schemas/Delivery"
+						},
+						"type": "array"
+					}
+				},
+				"type": "object",
+				"additionalProperties": true
+			},
+			"ServiceResponse_Delivery_": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"status": {
+						"type": "number",
+						"format": "double"
+					},
+					"data": {
+						"$ref": "#/components/schemas/Delivery"
+					}
+				},
+				"type": "object",
+				"additionalProperties": true
+			},
+			"Partial_Delivery_": {
+				"properties": {
+					"package_id": {
+						"type": "string"
+					},
+					"pickup_time": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"start_time": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"end_time": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"location": {
+						"properties": {
+							"lng": {
+								"type": "number",
+								"format": "double"
+							},
+							"lat": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"lng",
+							"lat"
+						],
+						"type": "object"
+					},
+					"status": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "gozem-package-tracker-backend",
+		"version": "1.0.0",
+		"description": "Backend for gozem tracker",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {
+			"name": "Nde Lucien"
+		}
+	},
+	"paths": {
+		"/api/v1/health/health": {
+			"get": {
+				"operationId": "GetHealth",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Health"
+								},
+								"examples": {
+									"Example 1": {
+										"value": [
+											{
+												"message": "pong"
+											}
+										]
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Test if API is available",
+				"tags": [
+					"Health Controller Operations"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/v1/package": {
+			"get": {
+				"operationId": "GetAllPackages",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceResponse_Package-Array_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"status": 200,
+											"message": "success",
+											"data": [
+												{
+													"description": "hello 00000xxx000",
+													"weight": 32,
+													"width": 12,
+													"height": 43,
+													"depth": 19,
+													"from_name": "xxxxhimxxxxx",
+													"from_address": "xxxxxfromxxxxx",
+													"from_location": {
+														"lat": 41.2222,
+														"lng": 45.12112
+													},
+													"to_name": "xxxxxherxxxxx",
+													"to_address": "xxxxxxwherexxx",
+													"to_location": {
+														"lat": 21.1212,
+														"lng": 32.12121
+													}
+												},
+												{
+													"description": "shoksssss 00000xxx000",
+													"weight": 32,
+													"width": 12,
+													"height": 43,
+													"depth": 19,
+													"from_name": "xxxxherxxxxx",
+													"from_address": "xxxxxfromxxxxx",
+													"from_location": {
+														"lat": 41.2222,
+														"lng": 45.12112
+													},
+													"to_name": "xxxxxhimxxxxx",
+													"to_address": "xxxxxxwherexxx",
+													"to_location": {
+														"lat": 21.1212,
+														"lng": 32.12121
+													}
+												}
+											]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Package Controller Operations"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/v1/package/{packageId}": {
+			"get": {
+				"operationId": "GetPackageById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceResponse_Package_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"status": 200,
+											"message": "success",
+											"data": {
+												"description": "hello 00000xxx000",
+												"weight": 32,
+												"width": 12,
+												"height": 43,
+												"depth": 19,
+												"from_name": "xxxxhimxxxxx",
+												"from_address": "xxxxxfromxxxxx",
+												"from_location": {
+													"lat": 41.2222,
+													"lng": 45.12112
+												},
+												"to_name": "xxxxxherxxxxx",
+												"to_address": "xxxxxxwherexxx",
+												"to_location": {
+													"lat": 21.1212,
+													"lng": 32.12121
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Package Controller Operations"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "packageId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdatePackage",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceResponse_Package_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"status": 201,
+											"message": "success",
+											"data": {
+												"description": "hello 00000xxx000",
+												"weight": 32,
+												"width": 12,
+												"height": 43,
+												"depth": 19,
+												"from_name": "xxxxhimxxxxx",
+												"from_address": "xxxxxfromxxxxx",
+												"from_location": {
+													"lat": 41.2222,
+													"lng": 45.12112
+												},
+												"to_name": "xxxxxherxxxxx",
+												"to_address": "xxxxxxwherexxx",
+												"to_location": {
+													"lat": 21.1212,
+													"lng": 32.12121
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Package Controller Operations"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "packageId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_Package_"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeletePackage",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceResponse_Package_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"status": 201,
+											"message": "success"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Package Controller Operations"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "packageId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/package/create": {
+			"post": {
+				"operationId": "CreateNewPackage",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceResponse_Package_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"status": 201,
+											"message": "success",
+											"data": {
+												"description": "hello 00000xxx000",
+												"weight": 32,
+												"width": 12,
+												"height": 43,
+												"depth": 19,
+												"from_name": "xxxxhimxxxxx",
+												"from_address": "xxxxxfromxxxxx",
+												"from_location": {
+													"lat": 41.2222,
+													"lng": 45.12112
+												},
+												"to_name": "xxxxxherxxxxx",
+												"to_address": "xxxxxxwherexxx",
+												"to_location": {
+													"lat": 21.1212,
+													"lng": 32.12121
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Package Controller Operations"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_Package_"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/delivery": {
+			"get": {
+				"operationId": "GetAllDeliveries",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceResponse_Delivery-Array_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"status": 200,
+											"message": "success",
+											"data": [
+												{
+													"package_id": "----xxxxxx-----",
+													"pickup_time": "2024-05-21T09:50:45.523Z",
+													"start_time": "2024-04-13T09:50:45.523Z",
+													"end_time": "2024-05-13T09:50:45.523Z",
+													"location": {
+														"lat": 4.1121,
+														"lng": 9.313131
+													},
+													"status": "open"
+												},
+												{
+													"package_id": "----xx4xxx-----",
+													"pickup_time": "2024-05-21T09:50:45.523Z",
+													"start_time": "2024-04-13T09:50:45.523Z",
+													"end_time": "2024-05-13T09:50:45.523Z",
+													"location": {
+														"lat": 4.1121,
+														"lng": 9.313131
+													},
+													"status": "picked-up"
+												}
+											]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Delivery Controller Operations"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/v1/delivery/{deliveryId}": {
+			"get": {
+				"operationId": "GetDeliveryById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceResponse_Delivery_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"status": 200,
+											"message": "success",
+											"data": {
+												"package_id": "----xx4xxx-----",
+												"pickup_time": "2024-05-21T09:50:45.523Z",
+												"start_time": "2024-04-13T09:50:45.523Z",
+												"end_time": "2024-05-13T09:50:45.523Z",
+												"location": {
+													"lat": 4.1121,
+													"lng": 9.313131
+												},
+												"status": "picked-up"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Delivery Controller Operations"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "deliveryId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdateDelivery",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceResponse_Delivery_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"status": 201,
+											"message": "success",
+											"data": {
+												"package_id": "----xx4xxx-----",
+												"pickup_time": "2024-05-21T09:50:45.523Z",
+												"start_time": "2024-04-13T09:50:45.523Z",
+												"end_time": "2024-05-13T09:50:45.523Z",
+												"location": {
+													"lat": 4.1121,
+													"lng": 9.313131
+												},
+												"status": "picked-up"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Delivery Controller Operations"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "deliveryId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_Delivery_"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteDelivery",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceResponse_Delivery_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"status": 201,
+											"message": "success"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Delivery Controller Operations"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "deliveryId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/delivery/create": {
+			"post": {
+				"operationId": "CreateNewDelivery",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceResponse_Delivery_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"status": 201,
+											"message": "success",
+											"data": {
+												"package_id": "----xx4xxx-----",
+												"pickup_time": "2024-05-21T09:50:45.523Z",
+												"start_time": "2024-04-13T09:50:45.523Z",
+												"end_time": "2024-05-13T09:50:45.523Z",
+												"location": {
+													"lat": 4.1121,
+													"lng": 9.313131
+												},
+												"status": "open"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Delivery Controller Operations"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_Delivery_"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/delivery/update-location/{packageId}": {
+			"post": {
+				"operationId": "UpdateDeliveryLocation",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceResponse_Delivery_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Delivery Controller Operations"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "packageId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"location": {
+										"properties": {
+											"lng": {
+												"type": "number",
+												"format": "double"
+											},
+											"lat": {
+												"type": "number",
+												"format": "double"
+											}
+										},
+										"required": [
+											"lng",
+											"lat"
+										],
+										"type": "object"
+									}
+								},
+								"required": [
+									"location"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}

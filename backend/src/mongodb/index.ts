@@ -6,7 +6,7 @@ export async function connectMongoDb() {
     .connect(APPCONFIGS.CONNECTION_STRING as string)
     .then(() =>
       console.log(
-        '[🚀 ] - App connected to mongodb on: ',
+        '[🚀 ] - App connected to mongodb on:',
         APPCONFIGS.CONNECTION_STRING
       )
     );

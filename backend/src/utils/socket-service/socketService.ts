@@ -14,7 +14,7 @@ export default class SocketService {
     console.log('[🚀 ] - Socket Server Started ');
 
     this.io.on('connection', (socket: Socket) => {
-      console.log('=============+> A user connected <+=');
+      console.log('=============+> A user connected ==> normal socket <+=');
       this.socket = socket;
       this.startSocketListeners();
     });
