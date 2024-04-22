@@ -1,6 +1,8 @@
+import { Package } from './package.type';
+
 export interface Delivery {
   delivery_id: string;
-  package_id?: string;
+  package_id?: Package;
   pickup_time?: Date;
   start_time?: Date;
   end_time?: Date;

@@ -1,0 +1,37 @@
+
+
+.side-body {
+    display: flex;
+    width: 200px;
+    height: 90vh;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+}
+
+.side-div {
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+    height: 70%;
+    align-items: center;
+    background-color: #a3e9f0;
+    border-radius: 20px;
+    gap: 20px;
+    padding-top: 20px;
+    justify-content: space-around;
+    
+}
+
+.side-div a{
+    height: 60px;
+    width: 80%;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 800;
+    align-items: center;
+    display: flex;
+    background-color: #f6b322;
+    color: white;
+}

@@ -1,0 +1,52 @@
+<div class="home-body">
+  <div class="package-list">
+    <h2>Package List</h2>
+    <div class="package-item-header">
+      <span class="package-row1"> Package ID </span>
+      <span class="package-row2"> Package Description </span>
+      <span class="package-row3">Package From</span>
+      <span class="package-row4">Package To</span>
+    </div>
+    <div *ngFor="let package of packages">
+      <div class="package-item">
+        <span class="package-row1">
+          {{ package.package_id }}
+        </span>
+        <span class="package-row2">
+          {{ package.description }}
+        </span>
+        <span class="package-row3">
+          {{ package.from_address }}
+        </span>
+        <span class="package-row4">
+          {{ package.to_address }}
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="delivery-list">
+    <h2>Delivery List</h2>
+    <div class="delivery-item-header">
+      <span class="delivery-row1"> Delivery ID </span>
+      <span class="delivery-row2"> Start Time </span>
+      <span class="delivery-row3">Package ID</span>
+      <span class="delivery-row4">Status</span>
+    </div>
+    <div *ngFor="let delivery of deliveries">
+      <div class="delivery-item">
+        <span class="delivery-row1">
+          {{ delivery.delivery_id }}
+        </span>
+        <span class="delivery-row2">
+          {{ delivery?.start_time }}
+        </span>
+        <span class="delivery-row3">
+          {{ delivery?.package_id?.package_id }}
+        </span>
+        <span class="delivery-row4">
+          {{ delivery.status.toUpperCase() }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

@@ -16,7 +16,9 @@ export default class DeliveryService {
   }
 
   public async getAllDeliveries(): Promise<ServiceResponse<Delivery[]>> {
-    const deliveries = await this.mongoService.read();
+    const deliveries = await this.mongoService.populate({
+      fields: ['package_id'],
+    });
 
     // ToDo: Paginate data
     return {

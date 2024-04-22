@@ -8,7 +8,7 @@ export interface IModelService<T> {
   readById(id: string): Promise<T | null>;
   update(id: string, data: Partial<T>): Promise<T | null>;
   delete(id: string): Promise<void>;
-  populate(populateOptions: PopulateOptions, filter?: any): Promise<T | null>;
+  populate(populateOptions: PopulateOptions, filter?: any): Promise<T[] | null>;
   populateById(id: string, populateOptions: PopulateOptions): Promise<T | null>;
   populateOne(
     populateOptions: PopulateOptions,
@@ -56,7 +56,7 @@ export class MongoService<T> implements IModelService<T> {
   async populate(
     populateOptions: PopulateOptions,
     filter?: any
-  ): Promise<T | null> {
+  ): Promise<T[] | null> {
     const query = this.model.find(filter);
 
     // Build the populate options based on provided arguments
@@ -67,7 +67,7 @@ export class MongoService<T> implements IModelService<T> {
     }
 
     const populatedDoc = await query;
-    return populatedDoc as T;
+    return populatedDoc as T[];
   }
 
   async populateById(

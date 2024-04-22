@@ -1,0 +1,140 @@
+.home-body {
+    display: flex;
+    height: 90vh;
+    background-color: #ccc;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+    // margin-left: -200px;
+}
+
+
+
+.package-list {
+    width: 85%;
+    max-height: 41vh;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    overflow-y: scroll;
+}
+.delivery-list {
+    width: 85%;
+    max-height: 41vh;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    overflow-y: scroll;
+}
+ h2 {
+    font-size: 20px;
+    font-weight: 800;
+}
+.package-item-header {
+    display: flex;
+    flex-direction: row;
+    height: 70px;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.delivery-item-header {
+    display: flex;
+    flex-direction: row;
+    height: 70px;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.package-item {
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+    width: 100%;
+}
+
+.delivery-item {
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+    width: 100%;
+}
+
+
+.package-item-header .package-row1, .package-item-header .package-row2, .package-item-header .package-row3, .package-item-header .package-row4 {
+    border: 2px solid #939393;
+    font-size: 16px;
+    font-weight: 700;
+    
+}
+
+.delivery-item-header .delivery-row1, .delivery-item-header .delivery-row2, .delivery-item-header .delivery-row3, .delivery-item-header .delivery-row4 {
+    border: 2px solid #939393;
+    font-size: 16px;
+    font-weight: 700;
+    
+}
+
+
+.package-row1 {
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+    
+}
+.package-row2 {
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+}
+.package-row3 {
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+}
+.package-row4 {
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+}
+
+
+.delivery-row1 {
+    width: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+    
+}
+.delivery-row2 {
+    width: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+}
+.delivery-row3 {
+    width: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+}
+.delivery-row4 {
+    width: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+}
