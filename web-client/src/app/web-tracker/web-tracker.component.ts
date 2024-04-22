@@ -67,7 +67,7 @@ export class WebTrackerComponent {
   }
 
   async onSubmit(): Promise<void> {
-    console.warn('Your package id has been submitted', this.trackerForm.value);
+    console.info('Your package id has been submitted', this.trackerForm.value);
     const { packageId } = this.trackerForm.value;
 
     if (!packageId) {

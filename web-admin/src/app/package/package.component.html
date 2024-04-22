@@ -1,1 +1,155 @@
-<p>package works!</p>
+<div class="package-body">
+  <h2>Create Package</h2>
+  <form
+    [formGroup]="createPackageForm"
+    (ngSubmit)="onSubmit()"
+    class="create-package-form"
+  >
+    <div>
+      <label>Package Description</label>
+      <input
+        id="description"
+        type="text"
+        formControlName="description"
+        placeholder="Enter Package Description"
+        class="package-description-input"
+      />
+    </div>
+    <div class="form-group">
+      <div>
+        <label>Width</label>
+        <input
+          id="width"
+          type="number"
+          formControlName="width"
+          placeholder="Width"
+          class="package-width-input"
+        />
+      </div>
+      <div>
+        <label>Height</label>
+        <input
+          id="height"
+          type="number"
+          formControlName="height"
+          placeholder="Height"
+          class="package-height-input"
+        />
+      </div>
+    </div>
+    <div class="form-group">
+      <div>
+        <label>Depth</label>
+        <input
+          id="depth"
+          type="number"
+          formControlName="depth"
+          placeholder="Depth"
+          class="package-depth-input"
+        />
+      </div>
+      <div>
+        <label>Weight</label>
+        <input
+          id="weight"
+          type="number"
+          formControlName="weight"
+          placeholder="Weight"
+          class="package-weight-input"
+        />
+      </div>
+    </div>
+    <div>
+      <label>Package Sender</label>
+      <input
+        id="from"
+        type="text"
+        formControlName="from"
+        placeholder="Enter Sender Name"
+        class="package-from-input"
+      />
+    </div>
+    <div>
+      <label>Package Origin</label>
+      <input
+        id="from_location"
+        type="text"
+        formControlName="from_location"
+        placeholder="Enter Package Origin"
+        class="package-from-location-input"
+      />
+    </div>
+    <div>
+      <label>Package Origin Coordinates</label>
+      <div class="form-group">
+        <div>
+          <label>Latitude</label>
+          <input
+            id="from_lat"
+            type="number"
+            formControlName="from_lat"
+            placeholder="Origin Latitude"
+            class="package-from-lat-input"
+          />
+        </div>
+        <div>
+          <label>Longitude</label>
+          <input
+            id="from_lng"
+            type="number"
+            formControlName="from_lng"
+            placeholder="Origin Longitude"
+            class="package-from-lng-input"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <label>Package Receiver</label>
+      <input
+        id="to"
+        type="text"
+        formControlName="to"
+        placeholder="Enter Receiver Name"
+        class="package-to-input"
+      />
+    </div>
+    <div>
+      <label>Package Destination</label>
+      <input
+        id="to_location"
+        type="text"
+        formControlName="to_location"
+        placeholder="Enter Package Destination"
+        class="package-to-location-input"
+      />
+    </div>
+    <div>
+      <label>Package Destination Coordinates</label>
+      <div class="form-group">
+        <div>
+          <label>Latitude</label>
+          <input
+            id="to_lat"
+            type="number"
+            formControlName="to_lat"
+            placeholder="Destination Latitude"
+            class="package-to-lat-input"
+          />
+        </div>
+        <div>
+          <label>Longitude</label>
+          <input
+            id="to_lng"
+            type="number"
+            formControlName="to_lng"
+            placeholder="Destination Longitude"
+            class="package-to-lng-input"
+          />
+        </div>
+      </div>
+    </div>
+
+    <button class="track-button" type="submit">Submit</button>
+  </form>
+</div>
