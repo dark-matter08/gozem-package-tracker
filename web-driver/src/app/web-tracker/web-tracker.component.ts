@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, QueryList, ViewChildren } from '@angular/core';
 import { WebTrackerService } from './web-tracker.service';
 import { FormBuilder } from '@angular/forms';
 import { Package } from '../../types/package.type';
@@ -20,8 +20,14 @@ export class WebTrackerComponent {
   display: any;
   zoom: number;
   markerOptions: {};
-  markerPositions: google.maps.LatLngLiteral[];
-  @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow | undefined;
+  markerPositions: {
+    location: google.maps.LatLngLiteral;
+    packageData: Package;
+    content: string;
+  }[];
+  @ViewChildren(MapInfoWindow) infoWindowsView:
+    | QueryList<MapInfoWindow>
+    | undefined;
   trackerForm = this.formBuilder.group({
     deliveryId: '',
   });
@@ -40,9 +46,9 @@ export class WebTrackerComponent {
       draggable: false,
     };
     this.markerPositions = [];
-    this.wsService.listen('location_changed').subscribe((res) => {
-      console.log(res);
-    });
+    // this.wsService.listen('location_changed').subscribe((res) => {
+    //   console.log(res);
+    // });
   }
 
   ngOnInit(): void {
@@ -51,12 +57,12 @@ export class WebTrackerComponent {
 
   async getAndBroadCastLocation(): Promise<void> {
     while (true) {
-      if (this.packageData?._id) {
+      if (this.packageData?._id && this.deliveryData?._id) {
         await this.webTrackerService.getLocationAndBroadcast(
-          this.packageData._id
+          this.deliveryData?._id
         );
       }
-      await new Promise((resolve) => setTimeout(resolve, 20000));
+      await new Promise((resolve) => setTimeout(resolve, 5000));
     }
   }
 
@@ -66,8 +72,17 @@ export class WebTrackerComponent {
   move(event: google.maps.MapMouseEvent) {
     if (event.latLng != null) this.display = event.latLng.toJSON();
   }
-  openInfoWindow(marker: MapMarker) {
-    if (this.infoWindow != undefined) this.infoWindow.open(marker);
+  openInfoWindow(marker: MapMarker, windowIndex: number) {
+    /// stores the current index in forEach
+    let curIdx = 0;
+    this.infoWindowsView?.forEach((window: MapInfoWindow) => {
+      if (windowIndex === curIdx) {
+        window.open(marker);
+        curIdx++;
+      } else {
+        curIdx++;
+      }
+    });
   }
 
   async onSubmit(): Promise<void> {
@@ -85,21 +100,31 @@ export class WebTrackerComponent {
       this.packageData = res.data?.package_id as Package;
 
       if (this.packageData && this.deliveryData) {
-        this.markerPositions.push(
-          this.packageData?.from_location as google.maps.LatLngLiteral
-        );
-        this.markerPositions.push(
-          this.packageData?.to_location as google.maps.LatLngLiteral
-        );
+        const fromLocationInfo = {
+          location: this.packageData
+            ?.from_location as google.maps.LatLngLiteral,
+          packageData: this.packageData as Package,
+          content: 'Package Origin',
+        };
+        this.markerPositions.push(fromLocationInfo);
+        const toLocationInfo = {
+          location: this.packageData?.to_location as google.maps.LatLngLiteral,
+          packageData: this.packageData as Package,
+          content: 'Package Destination',
+        };
+        this.markerPositions.push(toLocationInfo);
         this.center = this.deliveryData?.location;
-        this.markerPositions.push(
-          this.deliveryData.location as google.maps.LatLngLiteral
-        );
+        const currentLocation = {
+          location: this.deliveryData.location as google.maps.LatLngLiteral,
+          packageData: this.packageData as Package,
+          content: 'Package current location',
+        };
+        this.markerPositions.push(currentLocation);
         this.zoom = 15;
         if (this.packageData?._id) {
-          console.log('Joining tunnel on: ', this.packageData?._id);
+          console.log('Joining tunnel on: ', this.deliveryData?._id);
 
-          this.wsService.joinTunnel(this.packageData?._id);
+          this.wsService.joinTunnel(this.deliveryData?._id);
         }
       } else {
         this.center = this.packageData
@@ -108,48 +133,27 @@ export class WebTrackerComponent {
     });
 
     this.trackerForm.reset();
-
-    // const socket = this.wsService.getSocket();
-    // socket?.on('connected', (data: { tunnelId: string }) => {
-    //   console.log('User connected on tunnel: ', data.tunnelId);
-    // });
-
-    // socket?.on(
-    //   'location_changed',
-    //   (data: { tunnelId: string; location: google.maps.LatLngLiteral }) => {
-    //     this.center = data.location;
-    //     // Todo add code to recalculate poly lines of map
-    //   }
-    // );
   }
 
   async pickUp(): Promise<void> {
-    if (!this.deliveryData || !this.packageData) {
-      window.alert('Delivery or package id is not defined');
+    if (!this.deliveryData) {
+      window.alert('Delivery id is not defined');
       return;
     }
     this.webTrackerService
-      .updateStatus(
-        this.packageData?._id,
-        this.deliveryData._id,
-        DeliveryStatus.picked_up
-      )
+      .updateStatus(this.deliveryData._id, DeliveryStatus.picked_up)
       .subscribe((res) => {
         this.deliveryData = res.data;
       });
   }
 
   async inTransit(): Promise<void> {
-    if (!this.deliveryData || !this.packageData) {
-      window.alert('Delivery or package id is not defined');
+    if (!this.deliveryData) {
+      window.alert('Delivery id is not defined');
       return;
     }
     this.webTrackerService
-      .updateStatus(
-        this.packageData?._id,
-        this.deliveryData._id,
-        DeliveryStatus.in_transit
-      )
+      .updateStatus(this.deliveryData._id, DeliveryStatus.in_transit)
       .subscribe((res) => {
         this.deliveryData = res.data;
       });
@@ -157,15 +161,11 @@ export class WebTrackerComponent {
 
   async deliver(): Promise<void> {
     if (!this.deliveryData || !this.packageData) {
-      window.alert('Delivery or package id is not defined');
+      window.alert('Delivery id is not defined');
       return;
     }
     this.webTrackerService
-      .updateStatus(
-        this.packageData._id,
-        this.deliveryData._id,
-        DeliveryStatus.delivered
-      )
+      .updateStatus(this.deliveryData._id, DeliveryStatus.delivered)
       .subscribe((res) => {
         this.deliveryData = res.data;
       });
@@ -173,15 +173,11 @@ export class WebTrackerComponent {
 
   async fail(): Promise<void> {
     if (!this.deliveryData || !this.packageData) {
-      window.alert('Delivery or package id is not defined');
+      window.alert('Delivery id is not defined');
       return;
     }
     this.webTrackerService
-      .updateStatus(
-        this.packageData._id,
-        this.deliveryData._id,
-        DeliveryStatus.failed
-      )
+      .updateStatus(this.deliveryData._id, DeliveryStatus.failed)
       .subscribe((res) => {
         this.deliveryData = res.data;
       });

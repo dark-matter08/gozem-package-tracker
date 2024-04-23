@@ -22,14 +22,25 @@ export class WebTrackerService {
 
   updateStatus(
     tunnelId: string,
-    deliveryId: string,
     newStatus: DeliveryStatus
   ): Observable<Response<Delivery>> {
     this.wsService.broadCastDeliveryData(tunnelId, undefined, newStatus);
     return this.http.put<Response<Delivery>>(
-      `http://localhost:8004/api/v1/delivery/${deliveryId}`,
+      `http://localhost:8004/api/v1/delivery/${tunnelId}`,
       {
         status: newStatus,
+      }
+    );
+  }
+
+  updateLocation(
+    deliveryId: string,
+    location: google.maps.LatLngLiteral
+  ): Observable<Response<Delivery>> {
+    return this.http.put<Response<Delivery>>(
+      `http://localhost:8004/api/v1/delivery/${deliveryId}`,
+      {
+        location: location,
       }
     );
   }
@@ -42,8 +53,20 @@ export class WebTrackerService {
         longitude = position.coords.longitude;
         latitude = position.coords.latitude;
 
-        console.log('===== Broadcasting Location: ', { latitude, longitude });
+        console.log(
+          '===== Broadcasting Location on tunnel: ',
+          tunnelId,
+          '===> Location: ',
+          { latitude, longitude },
+          '<< ========='
+        );
 
+        this.updateLocation(tunnelId, {
+          lat: latitude,
+          lng: longitude,
+        }).subscribe((res) => {
+          console.log(res);
+        });
         this.wsService.broadCastDeliveryData(tunnelId, {
           lat: latitude,
           lng: longitude,

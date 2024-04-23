@@ -3,14 +3,14 @@ import http from 'http';
 
 export default class SocketService {
   public socket: Socket | null;
-  private activeTunnel: {};
+  private activeTunnels: {};
   public io: Server;
   public server: http.Server;
   constructor(app: Express.Application) {
     this.server = http.createServer(app);
     this.io = new Server(this.server, { cors: { origin: '*' } });
     this.socket = null;
-    this.activeTunnel = {};
+    this.activeTunnels = {};
     console.log('[🚀 ] - Socket Server Started ');
 
     this.io.on('connection', (socket: Socket) => {
@@ -23,25 +23,27 @@ export default class SocketService {
   private startSocketListeners() {
     // Join room
     this.socket?.on('joinTunnel', (data) => {
-      this.activeTunnel[data.tunnelId] = [
-        ...(this.activeTunnel?.[data.tunnelId] || []),
+      this.activeTunnels[data.tunnelId] = [
+        ...(this.activeTunnels?.[data.tunnelId] || []),
         this.socket?.id,
       ];
 
       this.socket?.join(data.tunnelId);
       this.socket?.emit('connected', data);
       console.log('========== [Tunnel Joined] ==============');
-      console.log(this.activeTunnel);
+      console.log(this.activeTunnels);
     });
 
     // Handle disconnection
     this.socket?.on('disconnect', () => {
-      // Loop through active rooms
-      for (const roomId in this.activeTunnel) {
-        if (Object.prototype.hasOwnProperty.call(this.activeTunnel, roomId)) {
-          // Remove disconnected socket from activeRooms for each room
-          this.activeTunnel[roomId] = this.activeTunnel[roomId].filter(
-            (socketId) => socketId !== this.socket?.id
+      // Loop through active tunnels
+      for (const tunnelId in this.activeTunnels) {
+        if (
+          Object.prototype.hasOwnProperty.call(this.activeTunnels, tunnelId)
+        ) {
+          // Remove disconnected socket from activeTunnels for each room
+          this.activeTunnels[tunnelId] = this.activeTunnels[tunnelId].filter(
+            (socketId: string) => socketId !== this.socket?.id
           );
         }
       }
@@ -49,9 +51,12 @@ export default class SocketService {
 
     this.socket?.on('delivery_updated', (data) => {
       const { tunnelId, location, status } = data;
-      console.log('======> getting new location data: ', data);
-      const tunnelSockets = this.activeTunnel[tunnelId] || [];
-      tunnelSockets.forEach((socketId) => {
+      console.log('======> getting new delivery data: ', data);
+
+      const tunnelSockets = this.activeTunnels[tunnelId] || [];
+
+      console.log('=======> Broadcasting to Sockets: ', tunnelSockets);
+      tunnelSockets.forEach((socketId: string) => {
         if (location) {
           this.io.to(socketId).emit('location_changed', { tunnelId, location });
         }
@@ -59,14 +64,6 @@ export default class SocketService {
           this.io.to(socketId).emit('status_changed', { tunnelId, status });
         }
       });
-    });
-
-    this.socket?.on('status_changed', (data) => {
-      this.io.emit('status_changed', { data });
-    });
-
-    this.socket?.on('delivery_updated', (data) => {
-      this.io.emit('delivery_updated', { data });
     });
   }
 }

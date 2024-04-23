@@ -65,11 +65,13 @@
     >
       <map-marker
         #marker="mapMarker"
-        *ngFor="let markerPosition of markerPositions"
-        [position]="markerPosition"
-        (mapClick)="openInfoWindow(marker)"
-      ></map-marker>
-      <map-info-window>Info Window content</map-info-window>
+        *ngFor="let markerPosition of markerPositions; let i = index"
+        [position]="markerPosition.location"
+        [options]="markerOptions"
+        (mapClick)="openInfoWindow(marker, i)"
+      >
+        <map-info-window>{{ markerPosition.content }}</map-info-window>
+      </map-marker>
     </google-map>
     <div *ngIf="packageData" class="track-buttons-right">
       <div class="right-header">
