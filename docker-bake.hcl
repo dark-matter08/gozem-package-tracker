@@ -17,3 +17,21 @@ target "build-client" {
     "linux/amd64",
   ]
 }
+
+target "build-driver" {
+  inherits = ["docker-metadata-action"]
+  context = "./web-driver"
+  compose-file = "docker-compose.yml"  
+  platforms = [
+    "linux/amd64",
+  ]
+}
+
+target "build-admin" {
+  inherits = ["docker-metadata-action"]
+  context = "./web-admin"
+  compose-file = "docker-compose.yml"  
+  platforms = [
+    "linux/amd64",
+  ]
+}

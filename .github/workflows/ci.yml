@@ -1,7 +1,7 @@
 name: Gozem Package Tracker - CI
 
 env:
-  REGISTRY: ghcr.io/dark-matter08  # Update with your organization's name
+  REGISTRY: ghcr.io/dark-matter08 
   BACKEND_IMAGE_NAME: gozem-package-tracker-backend
   CLIENT_IMAGE_NAME: gozem-package-tracker-client
   DRIVER_IMAGE_NAME: gozem-package-tracker-driver
@@ -35,7 +35,7 @@ jobs:
       - name: Get current commit hash
         run: echo "COMMIT_SHA=$(git rev-parse --short=7 HEAD)" >> $GITHUB_ENV
 
-      - name: Docker meta
+      - name: Docker meta backend
         id: meta-backend
         uses: docker/metadata-action@v5
         with:
@@ -48,12 +48,38 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=sha
 
-      - name: Docker meta
+      - name: Docker meta client
         id: meta-client
         uses: docker/metadata-action@v5
         with:
           images: |
             ${{ env.REGISTRY }}/${{ env.CLIENT_IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=tag
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
+      
+      - name: Docker meta driver
+        id: meta-driver
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ env.REGISTRY }}/${{ env.DRIVER_IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=tag
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
+
+      - name: Docker meta admin
+        id: meta-admin
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ env.REGISTRY }}/${{ env.ADMIN_IMAGE_NAME }}
           tags: |
             type=ref,event=branch
             type=ref,event=tag
@@ -73,7 +99,7 @@ jobs:
             ${{ steps.meta-backend.outputs.bake-file }}
           targets: build-backend
       
-      - name: Build and push Docker images using Bake
+      - name: Build and push Docker images using Bake - Client
         uses: docker/bake-action@v4
         with:
           push: true
@@ -81,3 +107,21 @@ jobs:
             ./docker-bake.hcl
             ${{ steps.meta-client.outputs.bake-file }}
           targets: build-client
+
+      - name: Build and push Docker images using Bake - Driver
+        uses: docker/bake-action@v4
+        with:
+          push: true
+          files: |
+            ./docker-bake.hcl
+            ${{ steps.meta-driver.outputs.bake-file }}
+          targets: build-driver
+
+      - name: Build and push Docker images using Bake - Admin
+        uses: docker/bake-action@v4
+        with:
+          push: true
+          files: |
+            ./docker-bake.hcl
+            ${{ steps.meta-admin.outputs.bake-file }}
+          targets: build-admin
