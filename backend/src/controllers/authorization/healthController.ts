@@ -13,7 +13,7 @@ export default class HealthController {
       message: 'pong',
     },
   ])
-  @Get('/health')
+  @Get('/')
   public async getHealth(): Promise<Health> {
     return new HealthService().getHealth();
   }
