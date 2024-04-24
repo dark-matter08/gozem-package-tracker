@@ -70,20 +70,20 @@
         (mapClick)="openInfoWindow(marker, i)"
       >
         <map-info-window>{{ markerPosition.content }}</map-info-window>
-        @if (directionsResults$ | async; as directionsResults) {
+
         <map-directions-renderer
-          [directions]="directionsResults"
-          [options]="directionLineOptions"
+          *ngIf="directionOptionsOriginDestination"
+          [options]="directionOptionsOriginDestination"
         />
-        } @if (directionsResultsOriginCenter$ | async; as
-        directionsResultsOriginCenter) {
-        <map-directions-renderer [directions]="directionsResultsOriginCenter" />
-        } @if (directionsResultsCenterDestination$ | async; as
-        directionsResultsCenterDestination) {
         <map-directions-renderer
-          [directions]="directionsResultsCenterDestination"
+          *ngIf="directionOptionsCenterDestination"
+          [options]="directionOptionsCenterDestination"
         />
-        }
+
+        <map-directions-renderer
+          *ngIf="directionOptionsOriginCenter"
+          [options]="directionOptionsOriginCenter"
+        />
       </map-marker>
     </google-map>
   </div>

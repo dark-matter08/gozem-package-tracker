@@ -25,7 +25,6 @@ export class WebTrackerComponent {
   zoom: number;
   markerOptions: {};
   map: google.maps.Map | undefined;
-  directionLineOptions: google.maps.DirectionsRendererOptions;
 
   markerPositions: {
     location: google.maps.LatLngLiteral;
@@ -39,16 +38,14 @@ export class WebTrackerComponent {
     packageId: '',
   });
   packageStatus: string;
-  directionsResults$:
-    | Observable<google.maps.DirectionsResult | undefined>
+  directionOptionsOriginDestination:
+    | google.maps.DirectionsRendererOptions
     | undefined;
-
-  directionsResultsOriginCenter$:
-    | Observable<google.maps.DirectionsResult | undefined>
+  directionOptionsOriginCenter:
+    | google.maps.DirectionsRendererOptions
     | undefined;
-
-  directionsResultsCenterDestination$:
-    | Observable<google.maps.DirectionsResult | undefined>
+  directionOptionsCenterDestination:
+    | google.maps.DirectionsRendererOptions
     | undefined;
 
   constructor(
@@ -57,11 +54,6 @@ export class WebTrackerComponent {
     private wsService: WebsocketService,
     private mapDirectionsService: MapDirectionsService
   ) {
-    this.directionLineOptions = {
-      polylineOptions: {
-        strokeColor: '#008000',
-      },
-    };
     this.center = {
       lat: 24,
       lng: 12,
@@ -124,21 +116,41 @@ export class WebTrackerComponent {
 
   pipeOriginToDestination(request: google.maps.DirectionsRequest) {
     this.mapDirectionsService.route(request).subscribe((response) => {
-      console.log(response);
-      this.directionsResults$ = of(response.result);
+      this.directionOptionsOriginDestination = {
+        directions: response.result,
+        polylineOptions: {
+          strokeColor: '#008000',
+        },
+        suppressInfoWindows: true,
+        suppressMarkers: true,
+      };
     });
   }
 
   pipeOriginToCenter(request: google.maps.DirectionsRequest) {
     this.mapDirectionsService.route(request).subscribe((response) => {
-      console.log(response);
-      this.directionsResultsOriginCenter$ = of(response.result);
+      this.directionOptionsOriginCenter = {
+        directions: response.result,
+        polylineOptions: {
+          strokeColor: '#FFA500',
+        },
+        suppressInfoWindows: true,
+        suppressMarkers: true,
+      };
     });
   }
   pipeCenterDestination(request: google.maps.DirectionsRequest) {
     this.mapDirectionsService.route(request).subscribe((response) => {
-      console.log(response);
-      this.directionsResultsCenterDestination$ = of(response.result);
+      this.directionOptionsCenterDestination = {
+        directions: response.result,
+        polylineOptions: {
+          strokeColor: '#0000FF',
+          strokeWeight: 5,
+          strokeOpacity: 0.1,
+        },
+        suppressInfoWindows: true,
+        suppressMarkers: true,
+      };
     });
   }
 
@@ -234,18 +246,5 @@ export class WebTrackerComponent {
     });
 
     this.trackerForm.reset();
-
-    // const socket = this.wsService.getSocket();
-    // socket?.on('connected', (data: { tunnelId: string }) => {
-    //   console.log('User connected on tunnel: ', data.tunnelId);
-    // });
-
-    // socket?.on(
-    //   'location_changed',
-    //   (data: { tunnelId: string; location: google.maps.LatLngLiteral }) => {
-    //     this.center = data.location;
-    //     // Todo add code to recalculate poly lines of map
-    //   }
-    // );
   }
 }
