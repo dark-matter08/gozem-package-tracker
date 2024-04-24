@@ -2,10 +2,10 @@ name: Gozem Package Tracker - CI
 
 env:
   REGISTRY: ghcr.io/dark-matter08  # Update with your organization's name
-  BACKEND_IMAGE_NAME: backend
-  CLIENT_IMAGE_NAME: client
-  DRIVER_IMAGE_NAME: driver
-  ADMIN_IMAGE_NAME: admin
+  BACKEND_IMAGE_NAME: gozem-package-tracker-backend
+  CLIENT_IMAGE_NAME: gozem-package-tracker-client
+  DRIVER_IMAGE_NAME: gozem-package-tracker-driver
+  ADMIN_IMAGE_NAME: gozem-package-tracker-admin
   IMAGE_TAG: main
 
 on:
