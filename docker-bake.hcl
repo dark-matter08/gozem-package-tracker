@@ -1,22 +1,10 @@
-bake {
-  image "backend" {
-    dockerfile = "./backend/Dockerfile"
-    context = "."
-  }
+target "docker-metadata-action" {}
 
-  image "client" {
-    dockerfile = "./web-client/Dockerfile"
-    context = "."
-  }
-
-  image "driver" {
-    dockerfile = "./web-driver/Dockerfile"
-    context = "."
-  }
-
-  image "admin" {
-    dockerfile = "./web-admin/Dockerfile"
-    context = "."
-  }
+target "build" {
+  inherits = ["docker-metadata-action"]
+  context = "./"
+  compose-file = "docker-compose.yml"  
+  platforms = [
+    "linux/amd64",
+  ]
 }
-
