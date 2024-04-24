@@ -5,7 +5,7 @@ import { Package } from '../../types/package.type';
 import { Delivery } from '../../types/delivery.type';
 import { MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { WebsocketService } from '../websocket.service';
-import { DeliveryStatus } from '../../types/enums';
+import { DeliveryStatus, ListeningEvents } from '../../types/enums';
 // import { Package } from '../../types/package.type';
 
 @Component({
@@ -46,9 +46,23 @@ export class WebTrackerComponent {
       draggable: false,
     };
     this.markerPositions = [];
-    // this.wsService.listen('location_changed').subscribe((res) => {
-    //   console.log(res);
-    // });
+    this.listenOnLocation();
+  }
+
+  async listenOnLocation(): Promise<void> {
+    this.wsService.listen(ListeningEvents.location_changed).subscribe((res) => {
+      console.log('Driver Receiving new location: ', res.location);
+      if (this.markerPositions.length >= 3) {
+        this.markerPositions.pop();
+      }
+      const newLocationInfo = {
+        location: res.location as google.maps.LatLngLiteral,
+        packageData: this.packageData as Package,
+        content: 'Package current location',
+      };
+      this.markerPositions.push(newLocationInfo);
+      this.center = res.location as google.maps.LatLngLiteral;
+    });
   }
 
   ngOnInit(): void {
