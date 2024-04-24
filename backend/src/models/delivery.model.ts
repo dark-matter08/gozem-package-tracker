@@ -6,7 +6,7 @@ const deliverySchema = new Schema<Delivery>({
   package_id: { type: Schema.Types.ObjectId, ref: 'Package', required: true },
   pickup_time: Date,
   delivery_id: { type: String, required: true },
-  start_time: { type: Date, default: Date.now },
+  start_time: Date,
   end_time: Date,
   location: {
     lat: Number,

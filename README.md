@@ -36,10 +36,30 @@ Step-4: clean database
 - 3: Web-Driver: [`http://localhost:4201`](http://localhost:4201)
 - 4: Web-Admin: [`http://localhost:4202`](http://localhost:4202)
 
-# Hosted Version Access Points
+# Screenshots
+
+- 1: Client Web Tracker
+
+![Fully Tracked Package till delivery](/screenshots/Screenshot%202024-04-24%20at%2023.22.10.png "Fully Tracked Package till delivery")
+![Package with unassigned delivery](/screenshots/Screenshot%202024-04-24%20at%2023.17.48.png "Package with unassigned delivery")
+
+- 2: Driver Web Dashboard
+
+![Driver Delivery with action buttons](/screenshots/Screenshot%202024-04-24%20at%2023.18.28.png "Driver Delivery with action buttons")
+
+- 3: Admin Web Dashboard
+
+![Admin home view packages and deliveries](/screenshots/Screenshot%202024-04-24%20at%2023.18.44.png "Admin home view packages and deliveries")
+![Admin create package form](/screenshots/Screenshot%202024-04-24%20at%2023.19.56.png "Admin create package form")
+![Admin create delivery selection form](/screenshots/Screenshot%202024-04-24%20at%2023.20.43.png "Admin create delivery selection form")
+
+
+
+
+<!-- # Hosted Version Access Points
 
 - 1: Backend BaseUrl: [`http://190.92.151.125:8004/api/v1`](http://190.92.151.125:8004/api/v1)
 - 1.1: Backend - Docs: [`http://190.92.151.125:8004/docs`](http://190.92.151.125:8004/docs)
 - 2: Web-Client: [`http://190.92.151.125:4200`](http://190.92.151.125:4200)
 - 3: Web-Driver: [`http://190.92.151.125:4201`](http://190.92.151.125:4201)
-- 4: Web-Admin: [`http://190.92.151.125:4202`](http://190.92.151.125:4202)
+- 4: Web-Admin: [`http://190.92.151.125:4202`](http://190.92.151.125:4202) -->

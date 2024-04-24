@@ -124,29 +124,6 @@ export default class DeliveryController {
     return this.deliveryService.deleteDelivery(deliveryId);
   }
 
-  @Post('/update-location/{packageId}')
-  @Example<ServiceResponse<Partial<Delivery>>>({
-    status: 200,
-    message: 'success',
-    data: {
-      package_id: '----xx9xxx-----',
-      pickup_time: new Date('2024-05-21T09:50:45.523Z'),
-      start_time: new Date('2024-04-13T09:50:45.523Z'),
-      end_time: new Date('2024-05-13T09:50:45.523Z'),
-      location: {
-        lat: 4.1121,
-        lng: 9.313131,
-      },
-      status: 'picked-up',
-    },
-  })
-  public async updateDeliveryLocation(
-    @Path() packageId: string,
-    @Body() data: { location: { lat: number; lng: number } }
-  ): Promise<ServiceResponse<Delivery>> {
-    return this.deliveryService.updateDeliveryLocation(packageId, data);
-  }
-
   @Get('/track/{deliveryId}')
   @Example<ServiceResponse<Partial<Delivery>>>({
     status: 200,

@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import io, { Socket } from 'socket.io-client';
+import io from 'socket.io-client';
 import { Observable } from 'rxjs';
-import * as Rx from 'rxjs';
-import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { DeliveryStatus } from '../types/enums';
+import { Delivery } from '../types/delivery.type';
 @Injectable()
 export class WebsocketService {
   private socket = io('http://localhost:8004');
@@ -21,6 +20,7 @@ export class WebsocketService {
       tunnelId: String;
       location?: google.maps.LatLngLiteral;
       status?: DeliveryStatus;
+      delivery?: Delivery;
     }>((observer) => {
       this.socket.on(event, (data) => {
         observer.next(data);

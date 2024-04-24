@@ -24,6 +24,8 @@ export class WebTrackerService {
         `Backend returned code ${error.status}, body was: `,
         error.error
       );
+
+      window.alert(error.error.message);
     }
     // Return an observable with a user-facing error message.
     return throwError(
@@ -43,7 +45,6 @@ export class WebTrackerService {
     tunnelId: string,
     newStatus: DeliveryStatus
   ): Observable<Response<Delivery>> {
-    this.wsService.broadCastDeliveryData(tunnelId, undefined, newStatus);
     return this.http
       .put<Response<Delivery>>(
         `http://localhost:8004/api/v1/delivery/${tunnelId}`,
@@ -68,6 +69,10 @@ export class WebTrackerService {
       .pipe(catchError(this.handleError));
   }
 
+  async broadCastStatusUpdate(tunnelId: string, newStatus: DeliveryStatus) {
+    this.wsService.broadCastDeliveryData(tunnelId, undefined, newStatus);
+  }
+
   async getLocationAndBroadcast(tunnelId: string): Promise<void> {
     if (navigator.geolocation) {
       let latitude;
@@ -84,12 +89,6 @@ export class WebTrackerService {
           '<< ========='
         );
 
-        this.updateLocation(tunnelId, {
-          lat: latitude,
-          lng: longitude,
-        }).subscribe((res) => {
-          console.log(res);
-        });
         this.wsService.broadCastDeliveryData(tunnelId, {
           lat: latitude,
           lng: longitude,

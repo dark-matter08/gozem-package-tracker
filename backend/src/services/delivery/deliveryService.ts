@@ -129,6 +129,44 @@ export default class DeliveryService {
     deliveryId: string,
     deliveryData: Partial<Delivery>
   ): Promise<ServiceResponse<Delivery>> {
+    if (deliveryData.status) {
+      const response = await this.getDeliveryById(deliveryId);
+      const currentDelivery = response.data;
+      const deliveryStatus = deliveryData.status;
+      if (deliveryStatus === DeliveryStatus.picked_up) {
+        if (currentDelivery?.status !== DeliveryStatus.open) {
+          return {
+            status: ResponseCode.HTTP_409_CONFLICT,
+            message: `cannot change delivery status from ${currentDelivery?.status} to ${deliveryStatus}`,
+          };
+        }
+        deliveryData.pickup_time = new Date();
+      }
+
+      if (deliveryStatus === DeliveryStatus.in_transit) {
+        if (currentDelivery?.status !== DeliveryStatus.picked_up) {
+          return {
+            status: ResponseCode.HTTP_409_CONFLICT,
+            message: `cannot change delivery status from ${currentDelivery?.status} to ${deliveryStatus}`,
+          };
+        }
+        deliveryData.start_time = new Date();
+      }
+
+      if (
+        deliveryStatus === DeliveryStatus.delivered ||
+        deliveryStatus === DeliveryStatus.failed
+      ) {
+        if (currentDelivery?.status !== DeliveryStatus.in_transit) {
+          return {
+            status: ResponseCode.HTTP_409_CONFLICT,
+            message: `cannot change delivery status from ${currentDelivery?.status} to ${deliveryStatus}`,
+          };
+        }
+        deliveryData.end_time = new Date();
+      }
+    }
+
     const deliveryItem = await this.mongoService.update(
       deliveryId,
       deliveryData as DeliveryType

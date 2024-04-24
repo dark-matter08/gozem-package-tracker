@@ -1,17 +1,21 @@
 import { Server, Socket } from 'socket.io';
 import http from 'http';
+import { DeliveryService } from '../../services';
+import { APPCONFIGS } from '../../configs';
 
 export default class SocketService {
   public socket: Socket | null;
   private activeTunnels: {};
   public io: Server;
   public server: http.Server;
+  private deliveryService: DeliveryService;
   constructor(app: Express.Application) {
+    this.deliveryService = new DeliveryService();
     this.server = http.createServer(app);
     this.io = new Server(this.server, { cors: { origin: '*' } });
     this.socket = null;
     this.activeTunnels = {};
-    console.log('[🚀 ] - Socket Server Started ');
+    console.log('[🚀 ] - Socket Server Started on port:', APPCONFIGS.PORT);
 
     this.io.on('connection', (socket: Socket) => {
       console.log('=============+> A user connected ==> normal socket <+=');
@@ -56,12 +60,22 @@ export default class SocketService {
       const tunnelSockets = this.activeTunnels[tunnelId] || [];
 
       console.log('=======> Broadcasting to Sockets: ', tunnelSockets);
-      tunnelSockets.forEach((socketId: string) => {
+      tunnelSockets.forEach(async (socketId: string) => {
         if (location) {
+          await this.deliveryService.updateDelivery(tunnelId, { location });
           this.io.to(socketId).emit('location_changed', { tunnelId, location });
         }
         if (status) {
-          this.io.to(socketId).emit('status_changed', { tunnelId, status });
+          const updatedDelivery = await this.deliveryService.updateDelivery(
+            tunnelId,
+            { status }
+          );
+
+          this.io.to(socketId).emit('status_changed', {
+            tunnelId,
+            status,
+            delivery: updatedDelivery.data,
+          });
         }
       });
     });

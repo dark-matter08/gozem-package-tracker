@@ -37,19 +37,74 @@
       </div>
       <div class="package-details-item">
         <span class="dms-title">Dimensions: </span>
-        <span>
-          <div>Width: {{ packageData.width }} cm</div>
-          <div>Height: {{ packageData.height }} cm</div>
-          <div>Depth: {{ packageData.depth }} cm</div>
-          <div>Weight: {{ packageData.weight }} kg</div>
+        <span class="package-details-item-sub">
+          <div class="package-sub-div">
+            <span class="dms-title-sub">Width: </span>
+            <span>{{ packageData.width }} cm</span>
+          </div>
+          <div class="package-sub-div">
+            <span class="dms-title-sub"> Height:</span>
+            <span> {{ packageData.height }} cm</span>
+          </div>
+          <div class="package-sub-div">
+            <span class="dms-title-sub">Depth: </span>
+            <span> {{ packageData.depth }} cm</span>
+          </div>
+          <div class="package-sub-div">
+            <span class="dms-title-sub">Weight:</span>
+            <span>{{ packageData.weight }} kg</span>
+          </div>
         </span>
       </div>
       <h2>Delivery Details</h2>
       <div *ngIf="deliveryData">
         <div class="package-details-item">
-          <span>Delivery Status: </span>
+          <span class="dms-title">Delivery Status: </span>
+          <span class="dms-title-val">
+            {{ deliveryData.status.toUpperCase() }}
+          </span>
+        </div>
+        <div class="package-details-item">
+          <span class="dms-title">Delivery Pickup Time: </span>
           <span>
-            {{ packageStatus }}
+            {{
+              deliveryData.pickup_time
+                ? deliveryData.pickup_time
+                : "Delivery not picked up"
+            }}
+          </span>
+        </div>
+        <div class="package-details-item">
+          <span class="dms-title">Delivery Start Time: </span>
+          <span>
+            {{
+              deliveryData.start_time
+                ? deliveryData.start_time
+                : "Delivery not started"
+            }}
+          </span>
+        </div>
+        <div class="package-details-item">
+          <span class="dms-title">Delivery End Time: </span>
+          <span>
+            {{
+              deliveryData.end_time
+                ? deliveryData.end_time
+                : "Delivery not completed"
+            }}
+          </span>
+        </div>
+        <div class="package-details-item">
+          <span class="dms-title">Delivery Time: </span>
+          <span>
+            {{
+              deliveryData.start_time && deliveryData.end_time
+                ? calculateDeliveryTime(
+                    deliveryData.start_time,
+                    deliveryData.end_time
+                  )
+                : "Delivery time not available"
+            }}
           </span>
         </div>
       </div>

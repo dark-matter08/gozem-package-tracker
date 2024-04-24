@@ -9,8 +9,7 @@ import {
   MapMarker,
 } from '@angular/google-maps';
 import { WebsocketService } from '../websocket.service';
-import { DeliveryStatus, ListeningEvents } from '../../types/enums';
-import { Observable, of } from 'rxjs';
+import { ListeningEvents } from '../../types/enums';
 
 @Component({
   selector: 'app-package-tracker',
@@ -37,7 +36,7 @@ export class WebTrackerComponent {
   trackerForm = this.formBuilder.group({
     packageId: '',
   });
-  packageStatus: string;
+
   directionOptionsOriginDestination:
     | google.maps.DirectionsRendererOptions
     | undefined;
@@ -63,7 +62,6 @@ export class WebTrackerComponent {
       draggable: false,
     };
     this.markerPositions = [];
-    this.packageStatus = DeliveryStatus.open;
     this.listenOnLocation();
     this.listenOnStatus();
   }
@@ -139,6 +137,7 @@ export class WebTrackerComponent {
       };
     });
   }
+
   pipeCenterDestination(request: google.maps.DirectionsRequest) {
     this.mapDirectionsService.route(request).subscribe((response) => {
       this.directionOptionsCenterDestination = {
@@ -150,6 +149,7 @@ export class WebTrackerComponent {
         },
         suppressInfoWindows: true,
         suppressMarkers: true,
+        preserveViewport: true,
       };
     });
   }
@@ -158,9 +158,20 @@ export class WebTrackerComponent {
     this.map = map;
   }
 
+  calculateDeliveryTime(startTime: Date, endTime: Date): string {
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+    const difference = Math.abs(end.getTime() - start.getTime());
+    const hours = Math.floor(difference / 1000 / 60 / 60);
+    const minutes = Math.floor((difference / 1000 / 60) % 60);
+
+    return `${hours} hours ${minutes} minutes`;
+  }
+
   async listenOnLocation(): Promise<void> {
     this.wsService.listen(ListeningEvents.location_changed).subscribe((res) => {
       console.log('Receiving new location: ', res.location);
+      this.center = res.location as google.maps.LatLngLiteral;
       if (this.markerPositions.length >= 3) {
         this.markerPositions.pop();
       }
@@ -170,21 +181,37 @@ export class WebTrackerComponent {
         content: 'Package current location',
       };
       this.markerPositions.push(newLocationInfo);
-      this.center = res.location as google.maps.LatLngLiteral;
+
+      this.calculateRoute(
+        this.packageData?.from_location as google.maps.LatLngLiteral,
+        res.location as google.maps.LatLngLiteral,
+        'origin-center'
+      );
+
+      this.calculateRoute(
+        res.location as google.maps.LatLngLiteral,
+        this.packageData?.to_location as google.maps.LatLngLiteral,
+        'center-destination'
+      );
     });
   }
 
   async listenOnStatus(): Promise<void> {
     this.wsService.listen(ListeningEvents.status_changed).subscribe((res) => {
       console.log('Receiving new status: ', res.status?.toUpperCase());
-      this.packageStatus = res.status as string;
+      this.deliveryData = res.delivery;
     });
   }
 
   async onSubmit(): Promise<void> {
     console.info('Your package id has been submitted', this.trackerForm.value);
     const { packageId } = this.trackerForm.value;
-
+    this.markerPositions = [];
+    this.packageData = undefined;
+    this.deliveryData = undefined;
+    this.directionOptionsOriginDestination = undefined;
+    this.directionOptionsOriginCenter = undefined;
+    this.directionOptionsCenterDestination = undefined;
     if (!packageId) {
       window.alert('Delivery id is required to track package!');
       return;
@@ -205,11 +232,9 @@ export class WebTrackerComponent {
         packageData: this.packageData as Package,
         content: 'Package Destination',
       };
-
       this.markerPositions.push(toLocationInfo);
 
       if (this.deliveryData) {
-        this.packageStatus = this.deliveryData.status;
         this.center = this.deliveryData.location;
         const currentLocation = {
           location: this.deliveryData.location as google.maps.LatLngLiteral,
@@ -218,9 +243,8 @@ export class WebTrackerComponent {
         };
         this.markerPositions.push(currentLocation);
         this.zoom = 15;
-        if (this.packageData?._id) {
+        if (this.deliveryData?._id) {
           console.log('Joining tunnel on: ', this.deliveryData?._id);
-
           this.wsService.joinTunnel(this.deliveryData?._id);
         }
         this.calculateRoute(

@@ -6,7 +6,6 @@ import cors from 'cors';
 import morgan from 'morgan';
 import { serverInstance, start_socket } from './utils/socket-service';
 import { connectMongoDb } from './mongodb';
-import { start_ws } from './utils/ws-service';
 class Server {
   public app: express.Application;
 
@@ -19,7 +18,6 @@ class Server {
       })
     );
     start_socket(this.app);
-    start_ws();
     connectMongoDb();
     this.config();
   }

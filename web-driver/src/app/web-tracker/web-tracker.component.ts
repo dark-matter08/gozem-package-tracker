@@ -3,10 +3,13 @@ import { WebTrackerService } from './web-tracker.service';
 import { FormBuilder } from '@angular/forms';
 import { Package } from '../../types/package.type';
 import { Delivery } from '../../types/delivery.type';
-import { MapInfoWindow, MapMarker } from '@angular/google-maps';
+import {
+  MapDirectionsService,
+  MapInfoWindow,
+  MapMarker,
+} from '@angular/google-maps';
 import { WebsocketService } from '../websocket.service';
 import { DeliveryStatus, ListeningEvents } from '../../types/enums';
-// import { Package } from '../../types/package.type';
 
 @Component({
   selector: 'app-package-tracker',
@@ -20,6 +23,8 @@ export class WebTrackerComponent {
   display: any;
   zoom: number;
   markerOptions: {};
+  map: google.maps.Map | undefined;
+
   markerPositions: {
     location: google.maps.LatLngLiteral;
     packageData: Package;
@@ -31,11 +36,21 @@ export class WebTrackerComponent {
   trackerForm = this.formBuilder.group({
     deliveryId: '',
   });
+  directionOptionsOriginDestination:
+    | google.maps.DirectionsRendererOptions
+    | undefined;
+  directionOptionsOriginCenter:
+    | google.maps.DirectionsRendererOptions
+    | undefined;
+  directionOptionsCenterDestination:
+    | google.maps.DirectionsRendererOptions
+    | undefined;
 
   constructor(
     private webTrackerService: WebTrackerService,
     private formBuilder: FormBuilder,
-    private wsService: WebsocketService
+    private wsService: WebsocketService,
+    private mapDirectionsService: MapDirectionsService
   ) {
     this.center = {
       lat: 24,
@@ -47,6 +62,7 @@ export class WebTrackerComponent {
     };
     this.markerPositions = [];
     this.listenOnLocation();
+    this.listenOnStatus();
   }
 
   async listenOnLocation(): Promise<void> {
@@ -62,11 +78,35 @@ export class WebTrackerComponent {
       };
       this.markerPositions.push(newLocationInfo);
       this.center = res.location as google.maps.LatLngLiteral;
+      this.zoom = 10;
+      this.calculateRoute(
+        this.packageData?.from_location as google.maps.LatLngLiteral,
+        res.location as google.maps.LatLngLiteral,
+        'origin-center'
+      );
+
+      this.calculateRoute(
+        res.location as google.maps.LatLngLiteral,
+        this.packageData?.to_location as google.maps.LatLngLiteral,
+        'center-destination'
+      );
+    });
+  }
+
+  async listenOnStatus(): Promise<void> {
+    this.wsService.listen(ListeningEvents.status_changed).subscribe((res) => {
+      console.log('Driver Receiving new status: ', res.status?.toUpperCase());
+
+      this.deliveryData = res.delivery;
     });
   }
 
   ngOnInit(): void {
     this.getAndBroadCastLocation();
+  }
+
+  onMapReady(map: google.maps.Map) {
+    this.map = map;
   }
 
   async getAndBroadCastLocation(): Promise<void> {
@@ -76,16 +116,10 @@ export class WebTrackerComponent {
           this.deliveryData?._id
         );
       }
-      await new Promise((resolve) => setTimeout(resolve, 5000));
+      await new Promise((resolve) => setTimeout(resolve, 20000));
     }
   }
 
-  moveMap(event: google.maps.MapMouseEvent) {
-    if (event.latLng != null) this.center = event.latLng.toJSON();
-  }
-  move(event: google.maps.MapMouseEvent) {
-    if (event.latLng != null) this.display = event.latLng.toJSON();
-  }
   openInfoWindow(marker: MapMarker, windowIndex: number) {
     /// stores the current index in forEach
     let curIdx = 0;
@@ -134,7 +168,7 @@ export class WebTrackerComponent {
           content: 'Package current location',
         };
         this.markerPositions.push(currentLocation);
-        this.zoom = 15;
+        this.zoom = 10;
         if (this.packageData?._id) {
           console.log('Joining tunnel on: ', this.deliveryData?._id);
 
@@ -154,11 +188,10 @@ export class WebTrackerComponent {
       window.alert('Delivery id is not defined');
       return;
     }
-    this.webTrackerService
-      .updateStatus(this.deliveryData._id, DeliveryStatus.picked_up)
-      .subscribe((res) => {
-        this.deliveryData = res.data;
-      });
+    this.webTrackerService.broadCastStatusUpdate(
+      this.deliveryData._id,
+      DeliveryStatus.picked_up
+    );
   }
 
   async inTransit(): Promise<void> {
@@ -166,11 +199,10 @@ export class WebTrackerComponent {
       window.alert('Delivery id is not defined');
       return;
     }
-    this.webTrackerService
-      .updateStatus(this.deliveryData._id, DeliveryStatus.in_transit)
-      .subscribe((res) => {
-        this.deliveryData = res.data;
-      });
+    this.webTrackerService.broadCastStatusUpdate(
+      this.deliveryData._id,
+      DeliveryStatus.in_transit
+    );
   }
 
   async deliver(): Promise<void> {
@@ -178,11 +210,10 @@ export class WebTrackerComponent {
       window.alert('Delivery id is not defined');
       return;
     }
-    this.webTrackerService
-      .updateStatus(this.deliveryData._id, DeliveryStatus.delivered)
-      .subscribe((res) => {
-        this.deliveryData = res.data;
-      });
+    this.webTrackerService.broadCastStatusUpdate(
+      this.deliveryData._id,
+      DeliveryStatus.delivered
+    );
   }
 
   async fail(): Promise<void> {
@@ -190,10 +221,81 @@ export class WebTrackerComponent {
       window.alert('Delivery id is not defined');
       return;
     }
-    this.webTrackerService
-      .updateStatus(this.deliveryData._id, DeliveryStatus.failed)
-      .subscribe((res) => {
-        this.deliveryData = res.data;
-      });
+    this.webTrackerService.broadCastStatusUpdate(
+      this.deliveryData._id,
+      DeliveryStatus.failed
+    );
+  }
+
+  calculateRoute(
+    start: google.maps.LatLngLiteral,
+    end: google.maps.LatLngLiteral,
+    type: 'origin-destination' | 'origin-center' | 'center-destination'
+  ) {
+    console.log(google.maps?.TravelMode);
+
+    if (!this) {
+      return;
+    }
+
+    const request: google.maps.DirectionsRequest = {
+      destination: end,
+      origin: start,
+      travelMode: 'DRIVING' as google.maps.TravelMode,
+    };
+    console.log(request);
+
+    if (type === 'origin-destination') {
+      this.pipeOriginToDestination(request);
+    }
+
+    if (type === 'origin-center') {
+      this.pipeOriginToCenter(request);
+    }
+
+    if (type === 'center-destination') {
+      this.pipeCenterDestination(request);
+    }
+  }
+
+  pipeOriginToDestination(request: google.maps.DirectionsRequest) {
+    this.mapDirectionsService.route(request).subscribe((response) => {
+      this.directionOptionsOriginDestination = {
+        directions: response.result,
+        polylineOptions: {
+          strokeColor: '#008000',
+        },
+        suppressInfoWindows: true,
+        suppressMarkers: true,
+      };
+    });
+  }
+
+  pipeOriginToCenter(request: google.maps.DirectionsRequest) {
+    this.mapDirectionsService.route(request).subscribe((response) => {
+      this.directionOptionsOriginCenter = {
+        directions: response.result,
+        polylineOptions: {
+          strokeColor: '#FFA500',
+        },
+        suppressInfoWindows: true,
+        suppressMarkers: true,
+      };
+    });
+  }
+
+  pipeCenterDestination(request: google.maps.DirectionsRequest) {
+    this.mapDirectionsService.route(request).subscribe((response) => {
+      this.directionOptionsCenterDestination = {
+        directions: response.result,
+        polylineOptions: {
+          strokeColor: '#0000FF',
+          strokeWeight: 5,
+          strokeOpacity: 0.1,
+        },
+        suppressInfoWindows: true,
+        suppressMarkers: true,
+      };
+    });
   }
 }

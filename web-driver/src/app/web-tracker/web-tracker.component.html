@@ -18,38 +18,80 @@
     <div *ngIf="packageData" class="track-results">
       <h2>Package Details</h2>
       <div class="package-details-item">
-        <span>From: </span>
+        <span class="dms-title">From: </span>
         <span
           >{{ packageData.from_name }} at
           <span class="location">{{ packageData.from_address }}</span>
         </span>
       </div>
       <div class="package-details-item">
-        <span>To: </span>
+        <span class="dms-title">To: </span>
         <span
           >{{ packageData.to_name }} at
           <span class="location">{{ packageData.to_address }}</span>
         </span>
       </div>
       <div class="package-details-item">
-        <span>Description: </span>
+        <span class="dms-title">Description: </span>
         <span>{{ packageData.description }} </span>
       </div>
       <div class="package-details-item">
-        <span>Dimensions: </span>
-        <span>
-          <span>{{ packageData.width }} cm </span> W x
-          <span>{{ packageData.height }} cm </span> H x
-          <span>{{ packageData.depth }} cm </span> D,
-          <span>Weight: {{ packageData.weight }} kg </span> W
+        <span class="dms-title">Dimensions: </span>
+        <span class="package-details-item-sub">
+          <div class="package-sub-div">
+            <span class="dms-title-sub">Width: </span>
+            <span>{{ packageData.width }} cm</span>
+          </div>
+          <div class="package-sub-div">
+            <span class="dms-title-sub"> Height:</span>
+            <span> {{ packageData.height }} cm</span>
+          </div>
+          <div class="package-sub-div">
+            <span class="dms-title-sub">Depth: </span>
+            <span> {{ packageData.depth }} cm</span>
+          </div>
+          <div class="package-sub-div">
+            <span class="dms-title-sub">Weight:</span>
+            <span>{{ packageData.weight }} kg</span>
+          </div>
         </span>
       </div>
       <h2>Delivery Details</h2>
       <div *ngIf="deliveryData">
         <div class="package-details-item">
-          <span>Delivery Status: </span>
+          <span class="dms-title">Delivery Status: </span>
+          <span class="dms-title-val">
+            {{ deliveryData.status.toUpperCase() }}
+          </span>
+        </div>
+        <div class="package-details-item">
+          <span class="dms-title">Delivery Pickup Time: </span>
           <span>
-            {{ deliveryData.status }}
+            {{
+              deliveryData.pickup_time
+                ? deliveryData.pickup_time
+                : "Delivery not picked up"
+            }}
+          </span>
+        </div>
+        <div class="package-details-item">
+          <span class="dms-title">Delivery Start Time: </span>
+          <span>
+            {{
+              deliveryData.start_time
+                ? deliveryData.start_time
+                : "Delivery not started"
+            }}
+          </span>
+        </div>
+        <div class="package-details-item">
+          <span class="dms-title">Delivery End Time: </span>
+          <span>
+            {{
+              deliveryData.end_time
+                ? deliveryData.end_time
+                : "Delivery not completed"
+            }}
           </span>
         </div>
       </div>
@@ -58,10 +100,9 @@
       *ngIf="packageData"
       [center]="center"
       [zoom]="zoom"
-      (mapClick)="moveMap($event)"
-      (mapMousemove)="move($event)"
       width="100%"
       height="100%"
+      (mapInitialized)="onMapReady($event)"
     >
       <map-marker
         #marker="mapMarker"
@@ -71,22 +112,62 @@
         (mapClick)="openInfoWindow(marker, i)"
       >
         <map-info-window>{{ markerPosition.content }}</map-info-window>
+
+        <map-directions-renderer
+          *ngIf="directionOptionsOriginDestination"
+          [options]="directionOptionsOriginDestination"
+        />
+        <map-directions-renderer
+          *ngIf="directionOptionsCenterDestination"
+          [options]="directionOptionsCenterDestination"
+        />
+
+        <map-directions-renderer
+          *ngIf="directionOptionsOriginCenter"
+          [options]="directionOptionsOriginCenter"
+        />
       </map-marker>
     </google-map>
     <div *ngIf="packageData" class="track-buttons-right">
       <div class="right-header">
         <h1>Action Buttons</h1>
       </div>
-      <button class="action-button pick-up" (click)="pickUp()">
+      <button
+        class="action-button pick-up"
+        (click)="pickUp()"
+        [disabled]="
+          packageData && deliveryData && deliveryData.status !== 'open'
+        "
+      >
         Picked Up
       </button>
-      <button class="action-button transit" (click)="inTransit()">
+      <button
+        class="action-button transit"
+        (click)="inTransit()"
+        [disabled]="
+          packageData && deliveryData && deliveryData.status !== 'picked-up'
+        "
+      >
         In Transit
       </button>
-      <button class="action-button delivered" (click)="deliver()">
+      <button
+        class="action-button delivered"
+        (click)="deliver()"
+        [disabled]="
+          packageData && deliveryData && deliveryData.status !== 'in-transit'
+        "
+      >
         Delivered
       </button>
-      <button class="action-button failed" (click)="fail()">Failed</button>
+      <button
+        class="action-button failed"
+        (click)="fail()"
+        [disabled]="
+          packageData && deliveryData && deliveryData.status !== 'in-transit'
+        "
+      >
+        Failed
+      </button>
     </div>
   </div>
 </div>

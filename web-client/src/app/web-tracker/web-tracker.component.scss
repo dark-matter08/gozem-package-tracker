@@ -38,6 +38,9 @@
     width: 20%;
     align-items: center;
     justify-content: center;
+    font-size: 20px;
+    font-weight: 600;
+    border-radius: 10px;
   }
 
   .track-body {
@@ -64,6 +67,7 @@
     border: 1px solid #ccc;
     width: 50%;
     height: 100%;
+    overflow-y: scroll;
     
   }
 
@@ -83,16 +87,33 @@
   .track-results h2 {
     /* Styles for headers within the results section */
     margin-bottom: 15px;
+    font-weight: 700;
+    font-size: 28px;
   }
   
   .location {
     background-color: #4CAF50;
     border-radius: 5px;
     padding: 5px 5px;
+    color: #fff;
+    font-weight: 600;
   }
 
   .dms-title {
     font-weight: 700;
+    flex: 1
+  }
+
+  .dms-title-sub {
+    font-weight: 600;
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .dms-title-val {
+    font-weight: 600;
   }
 
   .package-details-item{
@@ -100,8 +121,24 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: 16px 32px;
+    padding: 16px 20px;
     margin-bottom: 8px;
     border-radius: 2px;
-    background-color: #ddf3f6;
+    background-color: #b5ecf3;
+    border-radius: 10px;
+  }
+
+  .package-details-item-sub {
+    flex: 1;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    border-radius: 2px;
+    gap: 15px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .package-sub-div {
+    flex: 1;
+    display: flex;
   }

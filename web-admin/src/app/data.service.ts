@@ -22,6 +22,8 @@ export class DataService {
         `Backend returned code ${error.status}, body was: `,
         error.error
       );
+
+      window.alert(error.error.message);
     }
     // Return an observable with a user-facing error message.
     return throwError(
