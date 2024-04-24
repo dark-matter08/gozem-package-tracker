@@ -58,10 +58,9 @@
       *ngIf="packageData"
       [center]="center"
       [zoom]="zoom"
-      (mapClick)="moveMap($event)"
-      (mapMousemove)="move($event)"
       width="100%"
       height="100%"
+      (mapInitialized)="onMapReady($event)"
     >
       <map-marker
         #marker="mapMarker"
@@ -71,6 +70,20 @@
         (mapClick)="openInfoWindow(marker, i)"
       >
         <map-info-window>{{ markerPosition.content }}</map-info-window>
+        @if (directionsResults$ | async; as directionsResults) {
+        <map-directions-renderer
+          [directions]="directionsResults"
+          [options]="directionLineOptions"
+        />
+        } @if (directionsResultsOriginCenter$ | async; as
+        directionsResultsOriginCenter) {
+        <map-directions-renderer [directions]="directionsResultsOriginCenter" />
+        } @if (directionsResultsCenterDestination$ | async; as
+        directionsResultsCenterDestination) {
+        <map-directions-renderer
+          [directions]="directionsResultsCenterDestination"
+        />
+        }
       </map-marker>
     </google-map>
   </div>

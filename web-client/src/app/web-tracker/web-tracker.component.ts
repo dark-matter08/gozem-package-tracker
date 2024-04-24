@@ -3,9 +3,14 @@ import { WebTrackerService } from './web-tracker.service';
 import { FormBuilder } from '@angular/forms';
 import { Package } from '../../types/package.type';
 import { Delivery } from '../../types/delivery.type';
-import { MapInfoWindow, MapMarker } from '@angular/google-maps';
+import {
+  MapDirectionsService,
+  MapInfoWindow,
+  MapMarker,
+} from '@angular/google-maps';
 import { WebsocketService } from '../websocket.service';
 import { DeliveryStatus, ListeningEvents } from '../../types/enums';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-package-tracker',
@@ -19,6 +24,9 @@ export class WebTrackerComponent {
   display: any;
   zoom: number;
   markerOptions: {};
+  map: google.maps.Map | undefined;
+  directionLineOptions: google.maps.DirectionsRendererOptions;
+
   markerPositions: {
     location: google.maps.LatLngLiteral;
     packageData: Package;
@@ -31,12 +39,29 @@ export class WebTrackerComponent {
     packageId: '',
   });
   packageStatus: string;
+  directionsResults$:
+    | Observable<google.maps.DirectionsResult | undefined>
+    | undefined;
+
+  directionsResultsOriginCenter$:
+    | Observable<google.maps.DirectionsResult | undefined>
+    | undefined;
+
+  directionsResultsCenterDestination$:
+    | Observable<google.maps.DirectionsResult | undefined>
+    | undefined;
 
   constructor(
     private webTrackerService: WebTrackerService,
     private formBuilder: FormBuilder,
-    private wsService: WebsocketService
+    private wsService: WebsocketService,
+    private mapDirectionsService: MapDirectionsService
   ) {
+    this.directionLineOptions = {
+      polylineOptions: {
+        strokeColor: '#008000',
+      },
+    };
     this.center = {
       lat: 24,
       lng: 12,
@@ -51,9 +76,74 @@ export class WebTrackerComponent {
     this.listenOnStatus();
   }
 
-  ngOnInit(): void {
-    // this.listenOnLocation();
-    // this.listenOnStatus();
+  ngOnInit(): void {}
+
+  openInfoWindow(marker: MapMarker, windowIndex: number) {
+    /// stores the current index in forEach
+    let curIdx = 0;
+    this.infoWindowsView?.forEach((window: MapInfoWindow) => {
+      if (windowIndex === curIdx) {
+        window.open(marker);
+        curIdx++;
+      } else {
+        curIdx++;
+      }
+    });
+  }
+
+  calculateRoute(
+    start: google.maps.LatLngLiteral,
+    end: google.maps.LatLngLiteral,
+    type: 'origin-destination' | 'origin-center' | 'center-destination'
+  ) {
+    console.log(google.maps?.TravelMode);
+
+    if (!this) {
+      return;
+    }
+
+    const request: google.maps.DirectionsRequest = {
+      destination: end,
+      origin: start,
+      travelMode: 'DRIVING' as google.maps.TravelMode,
+    };
+    console.log(request);
+
+    if (type === 'origin-destination') {
+      this.pipeOriginToDestination(request);
+    }
+
+    if (type === 'origin-center') {
+      this.pipeOriginToCenter(request);
+    }
+
+    if (type === 'center-destination') {
+      this.pipeCenterDestination(request);
+    }
+  }
+
+  pipeOriginToDestination(request: google.maps.DirectionsRequest) {
+    this.mapDirectionsService.route(request).subscribe((response) => {
+      console.log(response);
+      this.directionsResults$ = of(response.result);
+    });
+  }
+
+  pipeOriginToCenter(request: google.maps.DirectionsRequest) {
+    this.mapDirectionsService.route(request).subscribe((response) => {
+      console.log(response);
+      this.directionsResultsOriginCenter$ = of(response.result);
+    });
+  }
+  pipeCenterDestination(request: google.maps.DirectionsRequest) {
+    this.mapDirectionsService.route(request).subscribe((response) => {
+      console.log(response);
+      this.directionsResultsCenterDestination$ = of(response.result);
+    });
+  }
+
+  onMapReady(map: google.maps.Map) {
+    this.map = map;
   }
 
   async listenOnLocation(): Promise<void> {
@@ -76,25 +166,6 @@ export class WebTrackerComponent {
     this.wsService.listen(ListeningEvents.status_changed).subscribe((res) => {
       console.log('Receiving new status: ', res.status?.toUpperCase());
       this.packageStatus = res.status as string;
-    });
-  }
-
-  moveMap(event: google.maps.MapMouseEvent) {
-    if (event.latLng != null) this.center = event.latLng.toJSON();
-  }
-  move(event: google.maps.MapMouseEvent) {
-    if (event.latLng != null) this.display = event.latLng.toJSON();
-  }
-  openInfoWindow(marker: MapMarker, windowIndex: number) {
-    /// stores the current index in forEach
-    let curIdx = 0;
-    this.infoWindowsView?.forEach((window: MapInfoWindow) => {
-      if (windowIndex === curIdx) {
-        window.open(marker);
-        curIdx++;
-      } else {
-        curIdx++;
-      }
     });
   }
 
@@ -122,6 +193,7 @@ export class WebTrackerComponent {
         packageData: this.packageData as Package,
         content: 'Package Destination',
       };
+
       this.markerPositions.push(toLocationInfo);
 
       if (this.deliveryData) {
@@ -139,9 +211,25 @@ export class WebTrackerComponent {
 
           this.wsService.joinTunnel(this.deliveryData?._id);
         }
+        this.calculateRoute(
+          this.packageData?.from_location as google.maps.LatLngLiteral,
+          this.deliveryData.location as google.maps.LatLngLiteral,
+          'origin-center'
+        );
+
+        this.calculateRoute(
+          this.deliveryData.location as google.maps.LatLngLiteral,
+          this.packageData?.to_location as google.maps.LatLngLiteral,
+          'center-destination'
+        );
       } else {
         this.center = this.packageData
           ?.from_location as google.maps.LatLngLiteral;
+        this.calculateRoute(
+          this.packageData?.from_location as google.maps.LatLngLiteral,
+          this.packageData?.to_location as google.maps.LatLngLiteral,
+          'origin-destination'
+        );
       }
     });
 
