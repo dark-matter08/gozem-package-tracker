@@ -232,8 +232,6 @@ export class WebTrackerComponent {
     end: google.maps.LatLngLiteral,
     type: 'origin-destination' | 'origin-center' | 'center-destination'
   ) {
-    console.log(google.maps?.TravelMode);
-
     if (!this) {
       return;
     }
@@ -243,7 +241,6 @@ export class WebTrackerComponent {
       origin: start,
       travelMode: 'DRIVING' as google.maps.TravelMode,
     };
-    console.log(request);
 
     if (type === 'origin-destination') {
       this.pipeOriginToDestination(request);
