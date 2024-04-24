@@ -3,9 +3,9 @@ import swaggerUi from 'swagger-ui-express';
 import { APPCONFIGS } from './configs';
 import routes from './routes';
 import cors from 'cors';
-import morgan from 'morgan';
 import { serverInstance, start_socket } from './utils/socket-service';
 import { connectMongoDb } from './mongodb';
+import { loggerMiddleware } from './utils';
 class Server {
   public app: express.Application;
 
@@ -26,7 +26,7 @@ class Server {
     this.app.set('port', APPCONFIGS.PORT);
     this.app.use(express.json());
     this.app.use(express.static('public'));
-    this.app.use(morgan('tiny'));
+    this.app.use(loggerMiddleware);
 
     this.app.use(
       '/docs',
