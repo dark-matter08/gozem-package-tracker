@@ -27,3 +27,19 @@ Step-4: clean database
   ```bash
       docker volume rm gozem-package-tracker_mongo-data
   ```
+
+# Access Points After Local Build
+
+1: Backend: `http://locahost:8004/api/v1`
+1.1: Backend - Docs: `http://locahost:8004/docs`
+2: Web-Client: `http://localhost:4200`
+3: Web-Driver: `http://localhost:4201`
+4: Web-Admin: `http://localhost:4202`
+
+# Hosted Version Access Points
+
+1: Backend: `http://190.92.151.125:8004/api/v1`
+1.1: Backend - Docs: `http://190.92.151.125:8004/docs`
+2: Web-Client: `http://190.92.151.125:4200`
+3: Web-Driver: `http://190.92.151.125:4201`
+4: Web-Admin: `http://190.92.151.125:4202`
